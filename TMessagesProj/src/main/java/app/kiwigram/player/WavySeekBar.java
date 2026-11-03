@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.NonNull;
+import androidx.dynamicanimation.animation.FloatValueHolder;
+import androidx.dynamicanimation.animation.SpringAnimation;
 
 public class WavySeekBar extends View {
 
@@ -44,6 +46,30 @@ public class WavySeekBar extends View {
     private long lastFrame;
     private boolean frozen;
     private float maxAmplitude = dp(4);
+
+    /**
+     * Ширина ползунка на M3E-пружине (KiwiMotion.SPATIAL_FAST: damping 0.6,
+     * stiffness 1400): при касании ползунок пружиной сужается, при отпускании
+     * возвращается с лёгким проскоком — вместо прежнего мгновенного
+     * 3↔5dp-скачка. Прерываемо: повторный вызов с новой целью сохраняет
+     * накопленную скорость.
+     */
+    private final FloatValueHolder thumbWidthHolder = new FloatValueHolder(dpf2(5));
+    private SpringAnimation thumbWidthAnim;
+    private float thumbWidthPx = dpf2(5);
+
+    private void animateThumbWidth(float targetPx) {
+        if (thumbWidthAnim == null) {
+            thumbWidthAnim = new SpringAnimation(thumbWidthHolder);
+            thumbWidthAnim.getSpring().setDampingRatio(0.6f).setStiffness(1400f);
+            thumbWidthAnim.setMinimumVisibleChange(0.01f);
+            thumbWidthAnim.addUpdateListener((animation, value, velocity) -> {
+                thumbWidthPx = value;
+                invalidate();
+            });
+        }
+        thumbWidthAnim.animateToFinalPosition(targetPx);
+    }
 
     public WavySeekBar(Context context) {
         super(context);
@@ -136,6 +162,7 @@ public class WavySeekBar extends View {
                 }
                 dragProgress = progressAt(event.getX());
                 performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP);
+                animateThumbWidth(dpf2(3f));
                 if (delegate != null) {
                     delegate.onSeekStart();
                     delegate.onSeekMove(dragProgress);
@@ -158,6 +185,7 @@ public class WavySeekBar extends View {
                     if (delegate != null) {
                         delegate.onSeekEnd(progress, true);
                     }
+                    animateThumbWidth(dpf2(5f));
                     invalidate();
                 }
                 return true;
@@ -167,6 +195,7 @@ public class WavySeekBar extends View {
                     if (delegate != null) {
                         delegate.onSeekEnd(progress, false);
                     }
+                    animateThumbWidth(dpf2(5f));
                     invalidate();
                 }
                 return true;
@@ -192,7 +221,7 @@ public class WavySeekBar extends View {
         float left = left();
         float right = right();
         float p = dragging ? dragProgress : progress;
-        float thumbW = dragging ? dp(3) : dp(5);
+        float thumbW = Math.max(dpf2(2f), thumbWidthPx);
         float x = left + p * (right - left);
         float gap = dp(6);
         float waveEnd = x - gap - thumbW / 2f;

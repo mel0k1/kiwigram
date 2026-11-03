@@ -247,7 +247,9 @@ public class AlertDialog extends Dialog implements Drawable.Callback, Notificati
             super(context);
             this.resourcesProvider = resourcesProvider;
 
-            setBackground(Theme.createSelectorDrawable(getThemedColor(Theme.key_dialogButtonSelector), 2));
+            // M3 text button: state layer по форме «пилюли» (48dp-кнопка → радиус 24),
+            // вместо прежнего прямоугольного ripple во всю кнопку.
+            setBackground(Theme.AdaptiveRipple.createRect(0, getThemedColor(Theme.key_dialogButtonSelector), 24));
             setPadding(dp(23), 0, dp(23), 0);
 
             imageView = new ImageView(context);
