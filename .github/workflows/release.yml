@@ -57,9 +57,12 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
       - name: Set up Android SDK Tools
-        uses: android-actions/setup-android@v4
-        with:
-          packages: "build-tools;36.0.0 ndk;27.2.12479018 platforms;android-37.0"
+        run: |
+          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          # На hosted-раннерах sdkmanager предустановлен; action-обёртка периодически
+          # падает на проверке его версии, поэтому пакеты и лицензии ставим напрямую.
+          yes | "$SDKM" --licenses > /dev/null 2>&1 || true
+          "$SDKM" "build-tools;36.0.0" "ndk;27.2.12479018" "platforms;android-37.0" > /dev/null
       - name: Install Native Build Dependencies
         run: |
           sudo apt-get update
