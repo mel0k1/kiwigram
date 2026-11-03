@@ -39,6 +39,9 @@ public class MorphableRoundRectDrawable extends Drawable {
         this.color = color;
         this.colorPressed = colorPressed;
         animation = new SpringAnimation(value, 0f);
+        // порог устоя: FloatValueHolder получает дефолт 1.0 (пиксельная шкала),
+        // для 0..1-прогресса это мгновенный конец — морф «щёлкал» бы без пружины
+        animation.setMinimumVisibleChange(0.001f);
         animation.getSpring().setDampingRatio(KiwiMotion.SPATIAL_DAMPING);
         animation.getSpring().setStiffness(KiwiMotion.SPATIAL_STIFFNESS_FAST);
         animation.addUpdateListener((a, v, velocity) -> invalidateSelf());
