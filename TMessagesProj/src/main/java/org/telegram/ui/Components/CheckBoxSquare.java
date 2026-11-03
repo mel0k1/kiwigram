@@ -8,7 +8,6 @@
 
 package org.telegram.ui.Components;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -17,7 +16,10 @@ import android.graphics.RectF;
 import android.view.View;
 
 import androidx.annotation.Keep;
+import androidx.dynamicanimation.animation.FloatPropertyCompat;
+import androidx.dynamicanimation.animation.SpringAnimation;
 
+import app.kiwigram.appearance.KiwiMotion;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.ui.ActionBar.Theme;
 
@@ -29,7 +31,7 @@ public class CheckBoxSquare extends View {
     private Canvas drawCanvas;
 
     private float progress;
-    private ObjectAnimator checkAnimator;
+    private SpringAnimation checkAnimator;
 
     private boolean attachedToWindow;
     private boolean isChecked;
@@ -85,6 +87,18 @@ public class CheckBoxSquare extends View {
         return progress;
     }
 
+    private static final FloatPropertyCompat<CheckBoxSquare> PROGRESS_PROPERTY = new FloatPropertyCompat<CheckBoxSquare>("progress") {
+        @Override
+        public float getValue(CheckBoxSquare object) {
+            return object.getProgress();
+        }
+
+        @Override
+        public void setValue(CheckBoxSquare object, float value) {
+            object.setProgress(value);
+        }
+    };
+
     private void cancelCheckAnimator() {
         if (checkAnimator != null) {
             checkAnimator.cancel();
@@ -92,9 +106,13 @@ public class CheckBoxSquare extends View {
     }
 
     private void animateToCheckedState(boolean newCheckedState) {
-        checkAnimator = ObjectAnimator.ofFloat(this, "progress", newCheckedState ? 1 : 0);
-        checkAnimator.setDuration(300);
-        checkAnimator.start();
+        // M3E: заезд — spatial с лёгким отскоком, отвод — effects без отскока;
+        // прерываемый спринг сохраняет скорость при повторном тапе.
+        if (checkAnimator == null) {
+            checkAnimator = new SpringAnimation(this, PROGRESS_PROPERTY);
+        }
+        checkAnimator.setSpring(newCheckedState ? KiwiMotion.spatialDefault() : KiwiMotion.effectsDefault());
+        checkAnimator.animateToFinalPosition(newCheckedState ? 1f : 0f);
     }
 
     @Override
@@ -147,7 +165,9 @@ public class CheckBoxSquare extends View {
         int uncheckedColor = getThemedColor(key1);
         int color = getThemedColor(key2);
         if (progress <= 0.5f) {
-            bounceProgress = checkProgress = progress / 0.5f;
+            // floor 0: у пружины на жёстком прерывании progress может уйти в минус,
+            // а Color.rgb не зажимает каналы — получили бы мусорный цвет
+            bounceProgress = checkProgress = Math.max(0f, progress) / 0.5f;
             int rD = (int) ((Color.red(color) - Color.red(uncheckedColor)) * checkProgress);
             int gD = (int) ((Color.green(color) - Color.green(uncheckedColor)) * checkProgress);
             int bD = (int) ((Color.blue(color) - Color.blue(uncheckedColor)) * checkProgress);
