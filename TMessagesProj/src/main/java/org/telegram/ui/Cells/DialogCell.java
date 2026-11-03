@@ -59,6 +59,8 @@ import androidx.collection.LongSparseArray;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.core.math.MathUtils;
+import androidx.dynamicanimation.animation.FloatValueHolder;
+import androidx.dynamicanimation.animation.SpringAnimation;
 
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
@@ -93,6 +95,8 @@ import org.telegram.tgnet.tl.TL_account;
 import org.telegram.tgnet.tl.TL_iv;
 import org.telegram.tgnet.tl.TL_stories;
 import org.telegram.ui.ActionBar.Theme;
+
+import app.kiwigram.appearance.KiwiMotion;
 import org.telegram.ui.Adapters.DialogsAdapter;
 import org.telegram.ui.AvatarSpan;
 import org.telegram.ui.Components.AnimatedEmojiDrawable;
@@ -3971,6 +3975,34 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
     private GradientDrawable archiveFadeGradientDrawable;
     private int archiveFadeGradientDrawableColor;
 
+    /**
+     * M3E-отклик списка чатов: аватар ячейки сжимается пружиной при нажатии
+     * строки (KiwiMotion.SPATIAL_FAST: damping 0.6, stiffness 1400) и
+     * возвращается с лёгким проскоком при отпускании. Прерываемо: перенос
+     * касания на другую строку сохраняет накопленную скорость.
+     */
+    private final FloatValueHolder avatarPressHolder = new FloatValueHolder(1f);
+    private SpringAnimation avatarPressAnim;
+    private float avatarPressScale = 1f;
+
+    @Override
+    public void setPressed(boolean pressed) {
+        super.setPressed(pressed);
+        if (!drawAvatar) {
+            return;
+        }
+        if (avatarPressAnim == null) {
+            avatarPressAnim = new SpringAnimation(avatarPressHolder);
+            avatarPressAnim.getSpring().setDampingRatio(KiwiMotion.SPATIAL_DAMPING).setStiffness(KiwiMotion.SPATIAL_STIFFNESS_FAST);
+            avatarPressAnim.setMinimumVisibleChange(0.001f);
+            avatarPressAnim.addUpdateListener((animation, value, velocity) -> {
+                avatarPressScale = value;
+                invalidate();
+            });
+        }
+        avatarPressAnim.animateToFinalPosition(pressed ? 0.94f : 1f);
+    }
+
     @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
@@ -4921,6 +4953,12 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
             canvas.scale(scale, scale, avatarImage.getCenterX(), avatarImage.getCenterY());
         }
 
+        final boolean scaleAvatar = drawAvatar && avatarPressScale != 1f;
+        if (scaleAvatar) {
+            canvas.save();
+            canvas.scale(avatarPressScale, avatarPressScale, avatarImage.getCenterX(), avatarImage.getCenterY());
+        }
+
         if (drawAvatar && (!(isTopic && forumTopic != null && forumTopic.id == 1) || archivedChatsDrawable == null || !archivedChatsDrawable.isDraw())) {
             if (drawMonoforumAvatar) {
                 if (bubbleClip == null) {
@@ -4968,6 +5006,10 @@ public class DialogCell extends BaseCell implements StoriesListPlaceProvider.Ava
 
                 communityArrowDrawable.draw(canvas);
             }
+        }
+
+        if (scaleAvatar) {
+            canvas.restore();
         }
 
         if (animatingArchiveAvatar) {
