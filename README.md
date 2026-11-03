@@ -1,170 +1,132 @@
-<div align="center">
+# kiwigram
 
-<img src="assets/logo.png" width="128" alt="exteraless">
+[![CI](https://github.com/mel0k1/kiwigram/actions/workflows/release.yml/badge.svg)](https://github.com/mel0k1/kiwigram/actions/workflows/release.yml)
+[![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE)
 
-# exteraless
+Android Telegram client with a plugin permission model, built on [exteraless](https://github.com/exteraless/exteraless). The long-term goal of the fork is a Material 3 Expressive redesign of the interface.
 
-Открытая версия exteraGram — с моделью разрешений для плагинов
+exteraless is an open-source implementation of exteraGram features on top of [NagramX](https://github.com/risin42/NagramX). kiwigram continues that work as its own build:
 
-[![Канал](https://img.shields.io/badge/Telegram-@exteraless-2CA5E0?logo=telegram&logoColor=white)](https://t.me/exteraless)
+* Package name: `app.kiwigram`
+* Plugin system with a permission model: a plugin declares what it needs, the install sheet shows it, and it gets only what was declared
+* Python plugin engine (Chaquopy) with an isolated runtime
+* Custom icon packs, Pill Stack, side menu and chat appearance settings
+* 64-bit only (`arm64-v8a`, `x86_64`): Chaquopy ships Python 3.11 for these ABIs
 
-</div>
+## Build
 
----
+Requirements: JDK 21, Python 3.11 on the build machine (for the Chaquopy runtime step), Android SDK with NDK 27.2.
 
-## Что это
-
-exteraless — форк [NagramX](https://github.com/risin42/NagramX), в котором возможности
-exteraGram реализованы с открытым исходным кодом.
-
-Отдельный упор — **безопасность плагинов**. В exteraGram плагин не ограничен ни в чём;
-здесь у него есть модель разрешений: плагин объявляет, что ему нужно, это
-видно на экране установки, и получает он только заявленное.
-
-Проект **в бете**: часть возможностей exteraGram ещё не перенесена. Если заметили, что
-каких-то функций не хватает, — откройте issue или напишите в [канал](https://t.me/exteraless?direct).
-
-* Имя пакета: `com.exteraless.app`
-* Что перенесено: экраны настроек, оформление и параметры чатов, иконпаки, полоса
-  пилюль (Pill Stack), боковое меню, движок Python-плагинов
-
-### Ссылки
-
-* Канал: [@exteraless](https://t.me/exteraless)
-* Исходники: [github.com/exteraless/exteraless](https://github.com/exteraless/exteraless)
-
-### Сборка
-
-1. Склонировать репозиторий вместе с подмодулями:
+1. Clone with submodules:
 
     ```bash
-    git clone --recursive --shallow-submodules https://github.com/exteraless/exteraless.git exteraless
+    git clone --recursive --shallow-submodules https://github.com/mel0k1/kiwigram.git kiwigram
     ```
 
-    Если репозиторий уже склонирован без подмодулей:
+    If the repository is already cloned:
 
     ```bash
     git submodule update --init --recursive --depth=1
     ```
 
-2. Получить `TELEGRAM_APP_ID` и `TELEGRAM_APP_HASH` на [my.telegram.org](https://my.telegram.org/auth)
-   и создать `local.properties` в корне проекта:
+2. Optional `local.properties` in the project root:
 
-   ```properties
-   TELEGRAM_APP_ID=<ваш_app_id>
-   TELEGRAM_APP_HASH=<ваш_app_hash>
-   ```
+    ```properties
+    TELEGRAM_APP_ID=<your_app_id>
+    TELEGRAM_APP_HASH=<your_app_hash>
+    MAPS_API_KEY=<your_maps_key>
+    KEYSTORE_PASS=<store_password>
+    ALIAS_NAME=<key_alias>
+    ALIAS_PASS=<key_password>
+    ```
 
-3. Для подписи APK положить свой `TMessagesProj/release.keystore` и дописать в `local.properties`:
+   Without these the build compiles against the bundled Telegram test API keys and signs with the Android debug key. For release signing put your `TMessagesProj/release.keystore` next to the build file.
 
-   ```properties
-   KEYSTORE_PASS=<пароль_хранилища>
-   ALIAS_NAME=<имя_ключа>
-   ALIAS_PASS=<пароль_ключа>
-   ```
+3. Build:
 
-   Ключа в репозитории нет намеренно. Без него сборка не падает — APK подписывается
-   отладочным ключом Android.
+    ```bash
+    ./gradlew :TMessagesProj:assembleDebug
+    ```
 
-4. Для push-уведомлений положить свой `TMessagesProj/google-services.json`
-   (Firebase, имя пакета `com.exteraless.app`).
+`NATIVE_TARGET` selects the ABI set: `arm64-v8a`, `x86_64`, `universal` (both), or `SKIP` (Java and resources only, no native code).
 
-5. Заменить метаданные проекта:
+## CI
 
-    - ключ Google Maps в записи `com.google.android.maps.v2.API_KEY` в `TMessagesProj/src/main/AndroidManifest.xml`;
-    - `BaseRemoteHelper.CHANNEL_METADATA_ID` — числовой id вашего канала метаданных, без префикса `-100`.
+| Trigger | Job |
+|---|---|
+| Push to `main` | Release build (`universal`), APK attached to an auto pre-release tagged `ci-<sha>` (keeps the last five) |
+| Pull request | Debug build (`arm64-v8a`), APK in run artifacts |
+| Manual dispatch | Same as the triggering workflow |
 
-6. Собрать: `./gradlew :TMessagesProj:assembleDebug` или открыть проект в Android Studio.
+Optional repository secrets, both base64-encoded:
 
-**Про ABI.** Собираются только 64-битные `arm64-v8a` и `x86_64`: Chaquopy собирает
-Python 3.12 лишь под них, и на `armeabi-v7a` конфигурация обрывается. Переменная
-`NATIVE_TARGET` задаёт цель: `arm64-v8a` (один ABI, быстрее), `universal` (оба),
-`SKIP` (без нативной части — только Java и ресурсы).
+* `LOCAL_PROPERTIES` — the contents of `local.properties` (`base64 -w0 local.properties`)
+* `RELEASE_KEYSTORE` — the release keystore (`base64 -w0 TMessagesProj/release.keystore`)
 
-### Сборка через GitHub Actions
+Without the secrets, builds still succeed with the built-in test API keys and the debug signing key. Telegram-channel publishing needs `TG_BOT_TOKEN`, `TG_API_ID`, `TG_API_HASH`, `TG_CHAT_ID` and stays off otherwise.
 
-Нужны два секрета репозитория:
+## Development
 
-* `LOCAL_PROPERTIES` — содержимое `local.properties` в base64:
+The plugin catalog test suite runs on plain CPython, no device needed:
 
-  ```bash
-  base64 -w0 local.properties
-  ```
+```bash
+python3 -m pytest tests/ -q
+```
 
-* `RELEASE_KEYSTORE` — файл ключа в base64:
+## Roadmap
 
-  ```bash
-  base64 -w0 TMessagesProj/release.keystore
-  ```
+* Material 3 Expressive redesign: shape language, expressive motion, color roles on top of the existing theme system
+* Own app icon and branding assets (the current launcher icon is inherited)
 
-Дальше запустить workflow **Release Build**. Готовый APK лежит в артефактах прогона.
+## Credits
 
-### Авторы дизайна
+Built on the work of many projects: [Telegram for Android](https://github.com/DrKLO/Telegram), [exteraless](https://github.com/exteraless/exteraless), [Nagram](https://github.com/NextAlone/Nagram), [NagramX](https://github.com/risin42/NagramX), [Nekogram](https://github.com/Nekogram/Nekogram), [exteraGram](https://github.com/exteraSquad/exteraGram), [AyuGram](https://github.com/AyuGram/AyuGram4A), [Cherrygram](https://github.com/arsLan4k1390/Cherrygram), [OctoGram](https://github.com/OctoGramApp/OctoGram).
 
-Иконки и оформление, унаследованные от exteraGram, созданы его дизайнером —
-[@the8055u](https://t.me/the8055u) и студией [@BlueprintDsgn](https://t.me/BlueprintDsgn).
-Права на эти материалы принадлежат авторам.
+Icons and visual design inherited from exteraGram are the work of [@the8055u](https://t.me/the8055u) and the [@BlueprintDsgn](https://t.me/BlueprintDsgn) studio. Rights to those materials belong to their authors.
 
-### Благодарности
+## License
 
-- [AyuGram](https://github.com/AyuGram/AyuGram4A)
-- [Cherrygram](https://github.com/arsLan4k1390/Cherrygram)
-- [Dr4iv3rNope](https://github.com/Dr4iv3rNope/NotSoAndroidAyuGram)
-- [exteraGram](https://github.com/exteraSquad/exteraGram)
-- [Inugram](https://github.com/teidesu/inugram)
-- [Nagram](https://github.com/NextAlone/Nagram)
-- [NagramX](https://github.com/risin42/NagramX)
-- [Nekogram](https://github.com/Nekogram/Nekogram)
-- [OctoGram](https://github.com/OctoGramApp/OctoGram)
+GPL-3.0, same as upstream. See [LICENSE](LICENSE).
 
 ---
 
-## English
+## Русский
 
-### What this is
+**kiwigram** — форк [exteraless](https://github.com/exteraless/exteraless): открытая реализация возможностей exteraGram поверх [NagramX](https://github.com/risin42/NagramX). Долгосрочная цель форка — редизайн интерфейса в стиле Material 3 Expressive.
 
-exteraless is a fork of [NagramX](https://github.com/risin42/NagramX) that implements
-exteraGram's features open-source.
+* Имя пакета: `app.kiwigram`
+* Плагины с моделью разрешений: плагин декларирует, что ему нужно, это видно на экране установки, и получает он только заявленное
+* Python-движок плагинов (Chaquopy) с изолированным рантаймом
+* Иконпаки, Pill Stack, боковое меню и настройки внешнего вида чатов
+* Только 64-битные ABI (`arm64-v8a`, `x86_64`): Chaquopy собирает Python 3.11 лишь под них
 
-The special focus is **plugin security**. In exteraGram a plugin is not restricted in
-any way; here it comes with a permission model and isolation: a plugin declares what it
-needs, you see that on the install sheet, and it gets only what was declared.
+### Сборка
 
-The project is **in beta**: some exteraGram features have not been ported yet. If you
-notice a missing feature, open an issue or write to the [channel](https://t.me/exteraless?direct).
+Нужны JDK 21, Python 3.11 на машине сборки и Android SDK с NDK 27.2.
 
-* Package name: `com.exteraless.app`
+```bash
+git clone --recursive --shallow-submodules https://github.com/mel0k1/kiwigram.git kiwigram
+./gradlew :TMessagesProj:assembleDebug
+```
 
-### Design credits
+`local.properties` в корне проекта: `TELEGRAM_APP_ID`, `TELEGRAM_APP_HASH` (свои ключи с [my.telegram.org](https://my.telegram.org/auth); по умолчанию вкомпилированы тестовые), `MAPS_API_KEY`, для подписи — `KEYSTORE_PASS`, `ALIAS_NAME`, `ALIAS_PASS` и `TMessagesProj/release.keystore`. `NATIVE_TARGET` задаёт набор ABI: `arm64-v8a`, `x86_64`, `universal` или `SKIP`.
 
-Icons and visual design inherited from exteraGram are the work of its designer,
-[@the8055u](https://t.me/the8055u), and the [@BlueprintDsgn](https://t.me/BlueprintDsgn)
-studio. Rights to those materials belong to their authors.
+### CI
 
-### Building
+Пуш в `main` — release-сборка с автоматическим pre-release `ci-<sha>`; pull request — debug-сборка с APK в артефактах. Секреты `LOCAL_PROPERTIES` и `RELEASE_KEYSTORE` (оба в base64) опциональны: без них сборка идёт на тестовых ключах и отладочной подписи.
 
-1. Clone with submodules:
+### Тесты
 
-    ```bash
-    git clone --recursive --shallow-submodules https://github.com/exteraless/exteraless.git exteraless
-    ```
+```bash
+python3 -m pytest tests/ -q
+```
 
-2. Get `TELEGRAM_APP_ID` and `TELEGRAM_APP_HASH` from [my.telegram.org](https://my.telegram.org/auth)
-   and put them into `local.properties` in the project root.
+### Благодарности
 
-3. For release signing, drop your own `TMessagesProj/release.keystore` and add
-   `KEYSTORE_PASS`, `ALIAS_NAME`, `ALIAS_PASS` to `local.properties`. No keystore is
-   shipped with the repository; without one the build is signed with the Android debug key.
+Сделано на базе множества проектов: [Telegram for Android](https://github.com/DrKLO/Telegram), [exteraless](https://github.com/exteraless/exteraless), [Nagram](https://github.com/NextAlone/Nagram), [NagramX](https://github.com/risin42/NagramX), [Nekogram](https://github.com/Nekogram/Nekogram), [exteraGram](https://github.com/exteraSquad/exteraGram), [AyuGram](https://github.com/AyuGram/AyuGram4A), [Cherrygram](https://github.com/arsLan4k1390/Cherrygram), [OctoGram](https://github.com/OctoGramApp/OctoGram).
 
-4. For push notifications, replace `TMessagesProj/google-services.json` with your own
-   Firebase config for `com.exteraless.app`.
+Иконки и оформление, унаследованные от exteraGram, созданы [@the8055u](https://t.me/the8055u) и студией [@BlueprintDsgn](https://t.me/BlueprintDsgn). Права на эти материалы принадлежат авторам.
 
-5. Build with `./gradlew :TMessagesProj:assembleDebug` or from Android Studio.
+### Лицензия
 
-Only 64-bit ABIs are built (`arm64-v8a`, `x86_64`): Chaquopy ships Python 3.12 for those
-only, and `armeabi-v7a` fails at configuration time. `NATIVE_TARGET` selects the target:
-`arm64-v8a`, `universal` (both) or `SKIP` (no native part).
-
-For CI, set two repository secrets — `LOCAL_PROPERTIES` and `RELEASE_KEYSTORE`, both
-base64-encoded — and run the **Release Build** workflow. The APK ends up in the run
-artifacts.
+GPL-3.0, как и у апстрима. Подробности в [LICENSE](LICENSE).
