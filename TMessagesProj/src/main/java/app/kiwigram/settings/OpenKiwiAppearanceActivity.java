@@ -113,6 +113,7 @@ public class OpenKiwiAppearanceActivity extends BaseNekoSettingsActivity {
     private int md3LoadingRow;
     private int md3SliderRow;
     private int md3SwitchRow;
+    private int md3DialogCornersRow;
     private int md3ChatHeaderRow;
     private int md3NavBarRow;
     private int md3ListItemsRow;
@@ -217,10 +218,12 @@ public class OpenKiwiAppearanceActivity extends BaseNekoSettingsActivity {
             md3ChatHeaderRow = addRow("md3ChatHeader");
             md3NavBarRow = addRow("md3NavBar");
             md3ListItemsRow = addRow("md3ListItems");
+            md3DialogCornersRow = addRow("md3DialogCorners");
             md3PlayerRow = addRow("md3Player");
             md3MiniPlayerRow = addRow("md3MiniPlayer");
         } else {
             md3LoadingRow = md3SliderRow = md3SwitchRow = md3ChatHeaderRow = md3NavBarRow = md3ListItemsRow = -1;
+            md3DialogCornersRow = -1;
             md3PlayerRow = md3MiniPlayerRow = -1;
         }
         iosGroupRow = addRow("iosStyles");
@@ -606,6 +609,12 @@ public class OpenKiwiAppearanceActivity extends BaseNekoSettingsActivity {
             onM3ListItemsChanged();
             rebuildAllAndSelf(view, AppearanceConfig.m3ListItems.Bool());
             return;
+        } else if (position == md3DialogCornersRow) {
+            // Применяется без перезапуска: радиус читается при создании каждого
+            // диалога/шита, уже открытые остаются как были.
+            AppearanceConfig.m3eDialogCorners.setConfigBool(!AppearanceConfig.m3eDialogCorners.Bool());
+            rebuildAllAndSelf(view, AppearanceConfig.m3eDialogCorners.Bool());
+            return;
         } else if (position == md3PlayerRow) {
             AppearanceConfig.md3Player.setConfigBool(!AppearanceConfig.md3Player.Bool());
             rebuildAllAndSelf(view, AppearanceConfig.md3Player.Bool());
@@ -975,6 +984,9 @@ public class OpenKiwiAppearanceActivity extends BaseNekoSettingsActivity {
                     } else if (position == md3ListItemsRow) {
                         cell.setText(getString(R.string.OEAppearanceM3ListItems), "",
                                 AppearanceConfig.m3ListItems.Bool(), true, true);
+                    } else if (position == md3DialogCornersRow) {
+                        cell.setText(getString(R.string.OEAppearanceM3EDialogCorners), "",
+                                AppearanceConfig.m3eDialogCorners.Bool(), true, true);
                     } else if (position == md3PlayerRow) {
                         cell.setText(getString(R.string.OEAppearanceMd3Player), "",
                                 AppearanceConfig.md3Player.Bool(), true, true);
@@ -1109,6 +1121,7 @@ public class OpenKiwiAppearanceActivity extends BaseNekoSettingsActivity {
             } else if (position == md3LoadingRow || position == md3SliderRow
                     || position == md3SwitchRow || position == md3ChatHeaderRow
                     || position == md3NavBarRow || position == md3ListItemsRow
+                    || position == md3DialogCornersRow
                     || position == md3PlayerRow || position == md3MiniPlayerRow
                     || position == iosNavBarRow || position == iosChatHeaderRow) {
                 return TYPE_ROUND_CHECK;

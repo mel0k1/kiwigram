@@ -253,6 +253,21 @@ object AppearanceConfig {
         return newNavigationBarStyle.Bool()
     }
 
+    /**
+     * Большие углы диалогов и боттомшитов в духе M3 Expressive (28dp вместо
+     * ~9/10dp): собственные 9-patch для AlertDialog и BottomSheet. Общие
+     * ассеты (меню, панель ввода, истории) не затрагиваются.
+     */
+    @JvmField
+    val m3eDialogCorners =
+        addConfig("OEAppearanceM3EDialogCorners", ConfigItem.configTypeBool, true)
+
+    @JvmStatic
+    fun m3eDialogCorners(): Boolean {
+        ensureLoaded()
+        return m3eDialogCorners.Bool()
+    }
+
     @JvmField
     val md3Player =
         addConfig("OEAppearanceMd3Player", ConfigItem.configTypeBool, true)

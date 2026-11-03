@@ -1257,7 +1257,12 @@ public class BottomSheet extends Dialog implements BaseFragment.AttachedSheet {
         touchSlop = vc.getScaledTouchSlop();
 
         Rect padding = new Rect();
-        shadowDrawable = context.getResources().getDrawable(R.drawable.sheet_shadow_round).mutate();
+        // M3E-углы (28dp) — отдельный 9-patch; при выключенном флаге — прежний
+        // sheet_shadow_round (им же пользуются панель ввода и истории).
+        shadowDrawable = context.getResources().getDrawable(
+                app.kiwigram.appearance.AppearanceConfig.m3eDialogCorners()
+                        ? R.drawable.sheet_shadow_round_m3e
+                        : R.drawable.sheet_shadow_round).mutate();
         shadowDrawable.setColorFilter(new PorterDuffColorFilter(internalBackgroundColor = getThemedColor(Theme.key_dialogBackground), PorterDuff.Mode.MULTIPLY));
         shadowDrawable.getPadding(padding);
         backgroundPaddingLeft = padding.left;

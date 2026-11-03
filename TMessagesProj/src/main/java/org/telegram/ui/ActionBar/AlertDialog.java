@@ -314,7 +314,11 @@ public class AlertDialog extends Dialog implements Drawable.Callback, Notificati
 
         backgroundPaddings = new Rect();
         if (progressStyle != ALERT_TYPE_SPINNER || blurredBackground) {
-            shadowDrawable = context.getResources().getDrawable(R.drawable.popup_fixed_alert4).mutate();
+            // M3E-углы (28dp) — отдельный 9-patch; при выключенном флаге — прежний
+            // popup_fixed_alert4 (им же пользуются меню и превью сообщений).
+            dialogCornerDp = app.kiwigram.appearance.AppearanceConfig.m3eDialogCorners() ? 28 : 20;
+            shadowDrawable = context.getResources().getDrawable(
+                    dialogCornerDp == 28 ? R.drawable.popup_fixed_alert_m3e : R.drawable.popup_fixed_alert4).mutate();
             blurOpacity = progressStyle == ALERT_TYPE_SPINNER ? 0.55f : (isDark ? 0.80f : 0.985f);
             shadowDrawable.setColorFilter(new PorterDuffColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY));
             shadowDrawable.getPadding(backgroundPaddings);
@@ -323,6 +327,9 @@ public class AlertDialog extends Dialog implements Drawable.Callback, Notificati
     }
 
     private long shownAt;
+
+    /** Радиус углов диалога в dp: 28 (M3E, popup_fixed_alert_m3e) или 20 (привычный popup_fixed_alert4). */
+    private int dialogCornerDp = app.kiwigram.appearance.AppearanceConfig.m3eDialogCorners() ? 28 : 20;
 
     @Override
     public void show() {
@@ -587,7 +594,8 @@ public class AlertDialog extends Dialog implements Drawable.Callback, Notificati
                             (getHeight() + h) / 2f
                     );
                 } else {
-                    r = dp(20);
+                    // синхронно с радиусом выбранного 9-patch (28dp M3E или 20dp)
+                    r = dp(dialogCornerDp);
                     AndroidUtilities.rectTmp.set(getPaddingLeft(), getPaddingTop(), getMeasuredWidth() - getPaddingRight(), getMeasuredHeight() - getPaddingBottom());
                 }
 
@@ -690,7 +698,7 @@ public class AlertDialog extends Dialog implements Drawable.Callback, Notificati
                 containerView.setPadding(0, 0, 0, 0);
                 containerView.setBackground(shadowDrawable);
 
-                containerView.setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(dp(8), dp(20)));
+                containerView.setOutlineProvider(ViewOutlineProviderImpl.boundsWithPaddingRoundRect(dp(8), dp(dialogCornerDp)));
                 containerView.setClipToOutline(true);
 
                 drawBackground = false;
