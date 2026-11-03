@@ -22,8 +22,8 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.loadingindicator.LoadingIndicator;
 
-import app.exteraless.appearance.AppearanceConfig;
-import app.exteraless.appearance.M3CircularProgress;
+import app.kiwigram.appearance.AppearanceConfig;
+import app.kiwigram.appearance.M3CircularProgress;
 
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.ui.ActionBar.Theme;

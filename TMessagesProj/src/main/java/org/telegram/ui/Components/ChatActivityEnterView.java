@@ -122,8 +122,8 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import org.telegram.ui.recyclerview.ChatListItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import app.exteraless.chats.LinkedCustomEmoji;
-import app.exteraless.components.ChatActivityEnterViewStaticIconView;
+import app.kiwigram.chats.LinkedCustomEmoji;
+import app.kiwigram.components.ChatActivityEnterViewStaticIconView;
 
 import org.jetbrains.annotations.NotNull;
 import org.telegram.messenger.AccountInstance;
@@ -725,7 +725,7 @@ public class ChatActivityEnterView extends FrameLayout implements
     private boolean destroyed;
 
     public MessageObject editingMessageObject;
-    private app.exteraless.chats.DeletedReplyQuote.Prefix editingQuotePrefix;
+    private app.kiwigram.chats.DeletedReplyQuote.Prefix editingQuotePrefix;
     private boolean editingCaption;
 
     private TL_account.TL_businessChatLink editingBusinessLink;
@@ -6631,7 +6631,7 @@ public class ChatActivityEnterView extends FrameLayout implements
         if (parentFragment != null && !isEditingBusinessLink() && !isLiveComment) {
             ViewCompat.setOnReceiveContentListener(messageEditText, RECEIVE_CONTENT_MIME_TYPES, (view, payload) -> onReceiveMediaContent(payload));
         }
-        messageEditText.setInlineMath(new app.exteraless.math.InlineMathController(messageEditText, new app.exteraless.math.InlineMathController.Delegate() {
+        messageEditText.setInlineMath(new app.kiwigram.math.InlineMathController(messageEditText, new app.kiwigram.math.InlineMathController.Delegate() {
             @Override
             public int accentColor() {
                 return getThemedColor(Theme.key_chat_messagePanelCursor);
@@ -6961,7 +6961,7 @@ public class ChatActivityEnterView extends FrameLayout implements
 
     private boolean shownAiButton;
     private void showAiButton(boolean show_) {
-        final boolean show = (show_ || richDraftActive) && parentFragment != null && !parentFragment.isSecretChat() && !app.exteraless.appearance.AiFeaturesHelper.isAiEditorHidden();
+        final boolean show = (show_ || richDraftActive) && parentFragment != null && !parentFragment.isSecretChat() && !app.kiwigram.appearance.AiFeaturesHelper.isAiEditorHidden();
 
         if (shownAiButton == show) return;
         if (show) {
@@ -8137,7 +8137,7 @@ public class ChatActivityEnterView extends FrameLayout implements
                 suggestButton.setVisibility(VISIBLE);
             }
         }
-        if (use && app.exteraless.chats.ChatsConfig.keepAttachButton.Bool()) {
+        if (use && app.kiwigram.chats.ChatsConfig.keepAttachButton.Bool()) {
             use = false;
         }
         int fromRes;
@@ -8531,7 +8531,7 @@ public class ChatActivityEnterView extends FrameLayout implements
     }
 
     protected boolean sendMessageInternal(boolean notify, int scheduleDate, int scheduleRepeatPeriod, long payStars, boolean allowConfirm, SendMessageInternalParams internalParams) {
-        if (app.exteraless.privacy.BotAccountRouter.guardComposer(parentFragment, currentAccount, dialog_id)) return true;
+        if (app.kiwigram.privacy.BotAccountRouter.guardComposer(parentFragment, currentAccount, dialog_id)) return true;
         final boolean allowConfirmFinal = allowConfirm && !animatorEphemeralMessageVisibility.getValue();
 
         final Runnable send = () -> {
@@ -11436,7 +11436,7 @@ public class ChatActivityEnterView extends FrameLayout implements
 
                 ArrayList<TLRPC.MessageEntity> entities = editingMessageObject.messageOwner.entities;
                 textToSetWithKeyboard = applyMessageEntities(entities, editingText, fontMetricsInt);
-                app.exteraless.chats.DeletedReplyQuote.Prefix quotePrefix = app.exteraless.chats.DeletedReplyQuote.prefix(currentAccount, editingMessageObject);
+                app.kiwigram.chats.DeletedReplyQuote.Prefix quotePrefix = app.kiwigram.chats.DeletedReplyQuote.prefix(currentAccount, editingMessageObject);
                 if (quotePrefix != null && textToSetWithKeyboard.length() >= quotePrefix.text.length()
                         && TextUtils.equals(textToSetWithKeyboard.subSequence(0, quotePrefix.text.length()).toString(), quotePrefix.text)) {
                     int quoteLength = quotePrefix.text.length();

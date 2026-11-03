@@ -375,6 +375,6 @@ public class AndroidUtil {
 
     public static boolean shouldEnableCrashlytics() {
         return !BuildConfig.DEBUG
-                && app.exteraless.general.GeneralConfig.crashReports();
+                && app.kiwigram.general.GeneralConfig.crashReports();
     }
 }

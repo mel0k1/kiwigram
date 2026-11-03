@@ -1,7 +1,7 @@
 package org.telegram.ui.Components;
 
-import app.exteraless.chats.LinkedCustomEmoji;
-import app.exteraless.utils.AppUtils;
+import app.kiwigram.chats.LinkedCustomEmoji;
+import app.kiwigram.utils.AppUtils;
 
 import static org.telegram.messenger.AndroidUtilities.dp;
 import static org.telegram.messenger.AndroidUtilities.dpf2;
@@ -7916,8 +7916,8 @@ public class SharedMediaLayout extends FrameLayout implements NotificationCenter
                             }
                             return;
                         }
-                        // exteraless plugins: установить плагин, а не открывать его в просмотрщике.
-                        if (app.exteraless.plugins.PluginInstallHelper.handleMessageTap(profileActivity.getParentActivity(), message)) {
+                        // kiwigram plugins: установить плагин, а не открывать его в просмотрщике.
+                        if (app.kiwigram.plugins.PluginInstallHelper.handleMessageTap(profileActivity.getParentActivity(), message)) {
                             return;
                         }
                         AndroidUtilities.openDocument(message, profileActivity.getParentActivity(), profileActivity);

@@ -22,7 +22,7 @@ import java.util.ArrayList;
  *
  * Плагины каталога подгружают собственный dex, скомпилированный против классов
  * exteraGram, и наследуют этот экран напрямую. Подстановка имён из
- * `extera_utils/class_aliases.py` работает только для Python, поэтому имя пакета
+ * `kiwi_utils/class_aliases.py` работает только для Python, поэтому имя пакета
  * здесь настоящее, а не наше.
  */
 public abstract class BasePreferencesActivity extends BaseFragment {

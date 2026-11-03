@@ -8,15 +8,15 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import corpus
 
-PYTHON_ROOT = os.environ.get("EXTERALESS_PYTHON_ROOT", corpus.PYTHON_ROOT)
-SCANNER = os.path.join(PYTHON_ROOT, "extera_utils", "capability_scan.py")
+PYTHON_ROOT = os.environ.get("KIWIGRAM_PYTHON_ROOT", corpus.PYTHON_ROOT)
+SCANNER = os.path.join(PYTHON_ROOT, "kiwi_utils", "capability_scan.py")
 
 
 @pytest.fixture(scope="module")
 def scanner():
     if not os.path.isfile(SCANNER):
         pytest.skip(f"missing {SCANNER}")
-    spec = importlib.util.spec_from_file_location("exteraless_capability_scan", SCANNER)
+    spec = importlib.util.spec_from_file_location("kiwigram_capability_scan", SCANNER)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module

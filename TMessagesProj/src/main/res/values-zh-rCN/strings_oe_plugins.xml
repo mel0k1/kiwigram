@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="OpenExteraPlugins">插件</string>
+    <string name="OpenKiwiPlugins">插件</string>
     <string name="PluginsSafeMode">安全模式</string>
     <string name="PluginsSafeModeSummary">开启安全模式后不会加载任何插件。当某个插件导致应用异常时可以使用。</string>
     <string name="PluginsUnsafeMode">不安全模式</string>

@@ -15891,7 +15891,7 @@ public class MessagesController extends BaseController implements NotificationCe
         }, ConnectionsManager.RequestFlagInvokeAfter);
     }
 
-    private final app.exteraless.privacy.BotStartDeduplicator botPrivacyStarts = new app.exteraless.privacy.BotStartDeduplicator();
+    private final app.kiwigram.privacy.BotStartDeduplicator botPrivacyStarts = new app.kiwigram.privacy.BotStartDeduplicator();
 
     public void sendBotStart(final TLRPC.User user, String botHash) {
         sendBotStart(user, botHash, false);
@@ -15899,12 +15899,12 @@ public class MessagesController extends BaseController implements NotificationCe
 
     public void sendBotStart(final TLRPC.User user, String botHash, boolean fromInlineSwitch) {
         // Inline switch-to-PM must return to the originating account's inline query.
-        if (!fromInlineSwitch && user != null && app.exteraless.privacy.BotAccountRouter.guardSend(currentAccount, user.id, () -> sendBotStart(user, botHash))) return;
+        if (!fromInlineSwitch && user != null && app.kiwigram.privacy.BotAccountRouter.guardSend(currentAccount, user.id, () -> sendBotStart(user, botHash))) return;
         if (user == null) {
             return;
         }
         final long botPrivacyIdentity = getUserConfig().getClientUserId();
-        final boolean botPrivacyDedupe = !fromInlineSwitch && app.exteraless.privacy.BotAccountRouter.enabled();
+        final boolean botPrivacyDedupe = !fromInlineSwitch && app.kiwigram.privacy.BotAccountRouter.enabled();
         if (botPrivacyDedupe && !botPrivacyStarts.begin(botPrivacyIdentity, user.id, botHash)) return;
         TLRPC.TL_messages_startBot req = new TLRPC.TL_messages_startBot();
         req.bot = getInputUser(user);
@@ -18267,11 +18267,11 @@ public class MessagesController extends BaseController implements NotificationCe
 
     // must be run from Utilities.stageQueue
     public void processUpdates(final TLRPC.Updates originalUpdates, boolean fromQueue) {
-        // exteraless plugins: on_updates_hook (CANCEL = контейнер не обрабатывается)
-        app.exteraless.plugins.HookResult hookResult = app.exteraless.plugins.PluginsController.getInstance().hasAnyUpdatesContainerHooks()
-                ? app.exteraless.plugins.PluginsController.getInstance()
-                        .executeOnUpdatesHook(currentAccount, app.exteraless.plugins.PluginsController.hookName(originalUpdates), originalUpdates)
-                : app.exteraless.plugins.HookResult.DEFAULT;
+        // kiwigram plugins: on_updates_hook (CANCEL = контейнер не обрабатывается)
+        app.kiwigram.plugins.HookResult hookResult = app.kiwigram.plugins.PluginsController.getInstance().hasAnyUpdatesContainerHooks()
+                ? app.kiwigram.plugins.PluginsController.getInstance()
+                        .executeOnUpdatesHook(currentAccount, app.kiwigram.plugins.PluginsController.hookName(originalUpdates), originalUpdates)
+                : app.kiwigram.plugins.HookResult.DEFAULT;
         if (hookResult.isCancel()) {
             return;
         }
@@ -18848,16 +18848,16 @@ public class MessagesController extends BaseController implements NotificationCe
             }
             return true;
         }
-        // exteraless plugins: on_update_hook (CANCEL = апдейт выкидывается из обработки).
+        // kiwigram plugins: on_update_hook (CANCEL = апдейт выкидывается из обработки).
         // Список принадлежит вызывающему (res.other_updates, updates.updates) и в
         // некоторых ветках обрабатывается повторно, поэтому фильтруем в копию,
         // а не мутируем чужое.
-        if (app.exteraless.plugins.PluginsController.getInstance().hasAnyUpdateHooks()) {
+        if (app.kiwigram.plugins.PluginsController.getInstance().hasAnyUpdateHooks()) {
             ArrayList<TLRPC.Update> allowed = null;
             int updateIndex = 0;
             for (TLRPC.Update u : updates) {
-                app.exteraless.plugins.HookResult updateResult = app.exteraless.plugins.PluginsController.getInstance()
-                        .executeOnUpdateHook(currentAccount, app.exteraless.plugins.PluginsController.hookName(u), u);
+                app.kiwigram.plugins.HookResult updateResult = app.kiwigram.plugins.PluginsController.getInstance()
+                        .executeOnUpdateHook(currentAccount, app.kiwigram.plugins.PluginsController.hookName(u), u);
                 TLRPC.Update replacement = updateResult.replacement(TLRPC.Update.class);
                 if (allowed == null && (updateResult.isCancel() || (replacement != null && replacement != u))) {
                     allowed = new ArrayList<>(updates.size());

@@ -1,1 +1,1 @@
-"""exteraless plugin SDK: settings UI declarations package."""
+"""kiwigram plugin SDK: settings UI declarations package."""

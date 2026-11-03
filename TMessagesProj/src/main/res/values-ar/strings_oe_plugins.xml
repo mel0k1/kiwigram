@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="OpenExteraPlugins">الإضافات</string>
+    <string name="OpenKiwiPlugins">الإضافات</string>
     <string name="PluginsSafeMode">الوضع الآمن</string>
     <string name="PluginsSafeModeEnabled">تم تفعيل الوضع الآمن. يسري مفعوله عند التشغيل التالي.</string>
     <string name="PluginsSafeModeDisabled">تم إيقاف الوضع الآمن. يسري مفعوله عند التشغيل التالي.</string>

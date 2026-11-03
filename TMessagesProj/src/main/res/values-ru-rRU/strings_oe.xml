@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="OpenExteraInfo">Настройте клиент под себя</string>
+    <string name="OpenKiwiInfo">Настройте клиент под себя</string>
 
 
-    <string name="OpenExteraChats">Чаты</string>
+    <string name="OpenKiwiChats">Чаты</string>
     <string name="AddCommaAfterMention">Запятая после упоминания</string>
 
 
-    <string name="OpenExteraCategories">Категории</string>
-    <string name="OpenExteraGeneral">Основные</string>
-    <string name="OpenExteraAppearance">Внешний вид</string>
-    <string name="OpenExteraOther">Ещё</string>
+    <string name="OpenKiwiCategories">Категории</string>
+    <string name="OpenKiwiGeneral">Основные</string>
+    <string name="OpenKiwiAppearance">Внешний вид</string>
+    <string name="OpenKiwiOther">Ещё</string>
 
-    <string name="OpenExteraLinks">Ссылки</string>
-    <string name="OpenExteraSource">Исходный код</string>
+    <string name="OpenKiwiLinks">Ссылки</string>
+    <string name="OpenKiwiSource">Исходный код</string>
     <string name="QrTitleLink">Ссылка</string>
     <string name="QrTitleWifi">Сеть Wi-Fi</string>
     <string name="QrTitleLogin">Код входа в Telegram</string>
@@ -24,16 +24,16 @@
     <string name="QrWifiUnknownNetwork">В коде нет имени сети</string>
     <string name="QrLoginHint">Этот код входит в аккаунт. Используйте Настройки → Устройства → Подключить устройство: тот экран проверяет код и защищает аккаунт.</string>
     <string name="QrLoginConfirm">Этот код входит в ваш аккаунт с нового устройства. Разрешайте, только если входите сами на своём устройстве.</string>
-    <string name="AppIconExteraless" translatable="false">exteraless</string>
+    <string name="AppIconKiwigram" translatable="false">kiwigram</string>
     <string name="AppIconBlueprint" translatable="false">Blueprint</string>
     <string name="AppIconRed" translatable="false">Red</string>
     <string name="AppIconNya" translatable="false">Nya</string>
     <string name="AppIconAyu" translatable="false">Ayu</string>
     <string name="AppIconQuack" translatable="false">Quack</string>
-    <string name="OpenExteraPreferences">Настройки exteraless</string>
-    <string name="OpenExteraDesignSection">Дизайн</string>
-    <string name="OpenExteraDesigner">Иконки и дизайн</string>
-    <string name="OpenExteraDesignStudio">Студия дизайна</string>
+    <string name="OpenKiwiPreferences">Настройки kiwigram</string>
+    <string name="OpenKiwiDesignSection">Дизайн</string>
+    <string name="OpenKiwiDesigner">Иконки и дизайн</string>
+    <string name="OpenKiwiDesignStudio">Студия дизайна</string>
     <string name="OEDownloadEmojiPacks">Загружать наборы эмодзи</string>
     <string name="OEChooseSubtitles">Выбрать субтитры</string>
     <string name="OEDisableSubtitles">Выключить субтитры</string>

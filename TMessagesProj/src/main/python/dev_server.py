@@ -1,4 +1,4 @@
-"""TCP/JSON development server on 127.0.0.1:42690 — exteraless plugin SDK.
+"""TCP/JSON development server on 127.0.0.1:42690 — kiwigram plugin SDK.
 
 Protocol (PLUGINS-API.md §8.2): line-delimited UTF-8 JSON objects; ``"@"``
 is the command name, ``"#"`` the client request id echoed back in the
@@ -6,7 +6,7 @@ response. Every response carries ``{"#": id, "ok": true|false}`` plus either
 a result payload or an ``"error"`` string. Malformed lines get an error
 response and the connection stays open.
 
-Started once from extera_utils.plugin_loader.start_dev_server() (the engine
+Started once from kiwi_utils.plugin_loader.start_dev_server() (the engine
 calls it in developer mode). Bind failures (port busy) disable the server
 quietly — the plugin engine must keep working without it.
 """
@@ -62,12 +62,12 @@ def _log(message):
         log(f"[dev_server] {message}")
     except Exception:
         import sys
-        print(f"[exteraless:dev_server] {message}", file=sys.stderr)
+        print(f"[kiwigram:dev_server] {message}", file=sys.stderr)
 
 
 def _controller():
     from java import jclass
-    return jclass("app.exteraless.plugins.PluginsController").getInstance()
+    return jclass("app.kiwigram.plugins.PluginsController").getInstance()
 
 
 def _incoming_plugins_dir() -> str:
@@ -154,7 +154,7 @@ def _cmd_write_plugin(request):
     from java import dynamic_proxy, jclass
 
     InstallCallback = jclass(
-        "app.exteraless.plugins.PluginsController$InstallCallback")
+        "app.kiwigram.plugins.PluginsController$InstallCallback")
     File = jclass("java.io.File")
     done = threading.Event()
     outcome = {}
@@ -178,7 +178,7 @@ def _cmd_remove_plugin(request):
     # Python-side cleanup first (unload + pip refcounts); the controller call
     # afterwards removes the file, prefs and registry entry.
     try:
-        from extera_utils import plugin_loader
+        from kiwi_utils import plugin_loader
         plugin_loader.uninstall_plugin(plugin_id)
     except Exception as e:
         _log(f"python-side uninstall of {plugin_id!r} failed: {e}")

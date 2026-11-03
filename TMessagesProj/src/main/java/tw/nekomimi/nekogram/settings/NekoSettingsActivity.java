@@ -102,7 +102,7 @@ public class NekoSettingsActivity extends BaseNekoSettingsActivity {
                 } else if (id == MENU_SEARCH) {
                     showSettingsSearchDialog();
                 } else if (id == MENU_SYNC) {
-                    presentFragment(new app.exteraless.settings.OpenExteraCloudActivity());
+                    presentFragment(new app.kiwigram.settings.OpenKiwiCloudActivity());
                 }
             }
         });

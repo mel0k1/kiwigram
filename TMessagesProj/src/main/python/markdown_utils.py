@@ -22,7 +22,7 @@ compute the same way, e.g.::
 
     len(parsed.text.encode('utf_16_le')) / 2
 
-Dialect (from :mod:`extera_utils.text_formatting`): ``**bold**``,
+Dialect (from :mod:`kiwi_utils.text_formatting`): ``**bold**``,
 ``__italic__``, ``~~strike~~``, ``||spoiler||``, ``` `code` ```,
 ```` ```lang\\ncode``` ````, ``[text](url)``, ``>quote`` / ``**>collapsed``,
 and ``![alt](tg://emoji?id=...)`` custom emoji.
@@ -30,7 +30,7 @@ and ``![alt](tg://emoji?id=...)`` custom emoji.
 
 from typing import Any, List, Optional
 
-from extera_utils.text_formatting import RawEntity, parse_raw
+from kiwi_utils.text_formatting import RawEntity, parse_raw
 
 __all__ = ["MarkdownEntity", "ParsedText", "parse_markdown", "parse_html"]
 
@@ -62,7 +62,7 @@ class MarkdownEntity:
         plugin that shifts ``entity.offset`` (common when prepending a header
         to the message) gets the shift honoured.
         """
-        from extera_utils.text_formatting import _materialize_entities
+        from kiwi_utils.text_formatting import _materialize_entities
 
         raw = RawEntity(
             offset=int(self.offset),

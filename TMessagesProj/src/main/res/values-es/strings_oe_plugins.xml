@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="OpenExteraPlugins">Plugins</string>
+    <string name="OpenKiwiPlugins">Plugins</string>
     <string name="PluginsSafeMode">Modo seguro</string>
     <string name="PluginsSafeModeSummary">Con el modo seguro activado no se carga ningún plugin. Úsalo si un plugin rompe la app.</string>
     <string name="PluginsUnsafeMode">Modo inseguro</string>

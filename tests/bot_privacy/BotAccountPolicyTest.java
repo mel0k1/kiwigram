@@ -1,4 +1,4 @@
-package app.exteraless.privacy;
+package app.kiwigram.privacy;
 
 public class BotAccountPolicyTest {
     public static void main(String[] args) {

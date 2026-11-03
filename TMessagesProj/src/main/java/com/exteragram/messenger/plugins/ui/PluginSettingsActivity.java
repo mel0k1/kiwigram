@@ -8,9 +8,9 @@ package com.exteragram.messenger.plugins.ui;
  * настроек, {@code presentFragment(PluginSettingsActivity(java_plugin))}.
  * Поэтому конструктор принимает и объект плагина, и его id.
  */
-public class PluginSettingsActivity extends app.exteraless.plugins.ui.PluginSettingsActivity {
+public class PluginSettingsActivity extends app.kiwigram.plugins.ui.PluginSettingsActivity {
 
-    public PluginSettingsActivity(app.exteraless.plugins.Plugin plugin) {
+    public PluginSettingsActivity(app.kiwigram.plugins.Plugin plugin) {
         super(plugin != null ? plugin.id : null);
     }
 

@@ -1393,11 +1393,11 @@ public class AIEditorAlert extends BottomSheetWithRecyclerListView implements No
 
             adapter.update(true);
         };
-        if (app.exteraless.ai.TelegramAiReplacement.replacesEditor(currentAccount)) {
+        if (app.kiwigram.ai.TelegramAiReplacement.replacesEditor(currentAccount)) {
             if (aiFallbackCancel != null) {
                 aiFallbackCancel.run();
             }
-            aiFallbackCancel = app.exteraless.ai.TelegramAiReplacement.compose(req, styleTabs.getSelectedTone(), from_lang,
+            aiFallbackCancel = app.kiwigram.ai.TelegramAiReplacement.compose(req, styleTabs.getSelectedTone(), from_lang,
                 res -> onResult.run(res, null),
                 (code, error) -> {
                     com.exteragram.messenger.ai.AiController.showErrorBulletin(bulletinContainer, resourcesProvider, code);

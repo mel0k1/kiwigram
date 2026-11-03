@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- exteraless: Python-плагины -->
-    <string name="OpenExteraPlugins">Плагины</string>
+    <!-- kiwigram: Python-плагины -->
+    <string name="OpenKiwiPlugins">Плагины</string>
     <string name="PluginsSafeMode">Безопасный режим</string>
     <string name="PluginsSafeModeEnabled">Безопасный режим включён. Подействует при следующем запуске.</string>
     <string name="PluginsSafeModeDisabled">Безопасный режим выключен. Подействует при следующем запуске.</string>

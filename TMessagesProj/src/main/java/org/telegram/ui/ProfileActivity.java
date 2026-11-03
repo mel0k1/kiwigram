@@ -273,7 +273,7 @@ import org.telegram.ui.Components.Premium.boosts.UserSelectorBottomSheet;
 import org.telegram.ui.Components.ProfileGalleryView;
 import org.telegram.ui.Components.ProfileGooeyView;
 import org.telegram.ui.Components.ProfileMusicView;
-import app.exteraless.components.ProfileMusicCard;
+import app.kiwigram.components.ProfileMusicCard;
 import com.exteragram.messenger.api.dto.BadgeDTO;
 import com.exteragram.messenger.badges.BadgesController;
 import org.telegram.ui.Components.ProfileBalanceView;
@@ -503,8 +503,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     private ActionBarMenuItem videoCallItem;
     private ActionBarMenuItem editItem;
     private ActionBarMenuItem otherItem;
-    // exteraless plugins: подменю PROFILE_ACTION_MENU в меню «⋮».
-    private app.exteraless.plugins.menus.MenuInjector.SwipeBackMenu pluginsMenu;
+    // kiwigram plugins: подменю PROFILE_ACTION_MENU в меню «⋮».
+    private app.kiwigram.plugins.menus.MenuInjector.SwipeBackMenu pluginsMenu;
     private ActionBarMenuItem searchItem;
     private ActionBarMenuSubItem editColorItem;
     private ActionBarMenuSubItem linkItem;
@@ -2332,7 +2332,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         getNotificationCenter().addObserver(this, NotificationCenter.profileMusicUpdated);
         getNotificationCenter().addObserver(this, NotificationCenter.updatedChatRanks);
         NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.emojiLoaded);
-        // exteraless plugins: реестр пунктов меняется, когда плагин включают/выключают.
+        // kiwigram plugins: реестр пунктов меняется, когда плагин включают/выключают.
         NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.pluginMenuItemsUpdated);
         updateRowsIds();
         if (listAdapter != null) {
@@ -2393,8 +2393,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 
         setActionsMode();
 
-        additionNavigationBarHeight = hasMainTabs ? dp(app.exteraless.appearance.MainTabsUiHelper.getTabsViewHeightDp()) : 0;
-        additionFloatingButtonOffset = hasMainTabs ? dp(app.exteraless.appearance.MainTabsUiHelper.getTabsFabOffsetDp()) : 0;
+        additionNavigationBarHeight = hasMainTabs ? dp(app.kiwigram.appearance.MainTabsUiHelper.getTabsViewHeightDp()) : 0;
+        additionFloatingButtonOffset = hasMainTabs ? dp(app.kiwigram.appearance.MainTabsUiHelper.getTabsFabOffsetDp()) : 0;
 
         return true;
     }
@@ -2636,8 +2636,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     public View createView(Context context) {
         Theme.createProfileResources(context);
         Theme.createChatResources(context, false);
-        additionNavigationBarHeight = hasMainTabs ? dp(app.exteraless.appearance.MainTabsUiHelper.getTabsViewHeightDp()) : 0;
-        additionFloatingButtonOffset = hasMainTabs ? dp(app.exteraless.appearance.MainTabsUiHelper.getTabsFabOffsetDp()) : 0;
+        additionNavigationBarHeight = hasMainTabs ? dp(app.kiwigram.appearance.MainTabsUiHelper.getTabsViewHeightDp()) : 0;
+        additionFloatingButtonOffset = hasMainTabs ? dp(app.kiwigram.appearance.MainTabsUiHelper.getTabsFabOffsetDp()) : 0;
 
         BaseFragment lastFragment = parentLayout.getLastFragment();
         if (lastFragment instanceof ChatActivity && ((ChatActivity) lastFragment).themeDelegate != null && ((ChatActivity) lastFragment).themeDelegate.getCurrentTheme() != null && !((ChatActivity) lastFragment).themeDelegate.isGiftTheme()) {
@@ -6352,7 +6352,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         final float fade = (float) Math.pow(progress, 1.5d);
         final boolean animateStory = storyView != null && playProfileAnimation != 2;
 
-        if (isTopic || !app.exteraless.appearance.AppearanceConfig.gooeyAvatarAnimation()) {
+        if (isTopic || !app.kiwigram.appearance.AppearanceConfig.gooeyAvatarAnimation()) {
             avatarGooey.setAlpha(1f - fade);
             if (giftsView != null) {
                 giftsView.setAlpha(1f - (float) Math.pow(Math.min(progress, 0.6f) / 0.6f, 1.5d));
@@ -6786,7 +6786,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         }
         boolean hasStories = needInsetForStories();
         float size;
-        int cornerType = app.exteraless.appearance.AppearanceConfig.CORNER_TYPE_DEFAULT;
+        int cornerType = app.kiwigram.appearance.AppearanceConfig.CORNER_TYPE_DEFAULT;
         if (chatId != 0) {
             TLRPC.Chat chatLocal = getMessagesController().getChat(chatId);
             if (chatLocal != null) {
@@ -6795,10 +6795,10 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 }
                 if (ChatObject.isForum(chatLocal)) {
                     size = dp(hasStories ? 48 : 76);
-                    cornerType = app.exteraless.appearance.AppearanceConfig.CORNER_TYPE_FORUM;
+                    cornerType = app.kiwigram.appearance.AppearanceConfig.CORNER_TYPE_FORUM;
                 } else if (ChatObject.isCommunity(chatLocal)) {
                     size = dp(100);
-                    cornerType = app.exteraless.appearance.AppearanceConfig.CORNER_TYPE_COMMUNITY;
+                    cornerType = app.kiwigram.appearance.AppearanceConfig.CORNER_TYPE_COMMUNITY;
                 } else {
                     size = dp(100);
                 }
@@ -6808,7 +6808,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         } else {
             size = dp(100);
         }
-        return app.exteraless.appearance.AppearanceConfig.getAvatarCorners(size, cornerType, hasStories);
+        return app.kiwigram.appearance.AppearanceConfig.getAvatarCorners(size, cornerType, hasStories);
     }
 
     private void updateTtlIcon() {
@@ -9445,7 +9445,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
     @Override
     public void didReceivedNotification(int id, int account, final Object... args) {
         if (id == NotificationCenter.pluginMenuItemsUpdated) {
-            // exteraless plugins: пересобрать подменю PROFILE_ACTION_MENU.
+            // kiwigram plugins: пересобрать подменю PROFILE_ACTION_MENU.
             if (pluginsMenu != null) {
                 pluginsMenu.refresh();
             }
@@ -11067,8 +11067,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         if (userId != 0) {
             TLRPC.User user = getMessagesController().getUser(userId);
             if (userInfo != null && userInfo.saved_music != null && (imageUpdater == null || myProfile)) {
-                if (app.exteraless.appearance.AppearanceConfig.profileMusicCard()
-                        && app.exteraless.nowplaying.NowPlayingController.shouldShowCard(userInfo.saved_music)) {
+                if (app.kiwigram.appearance.AppearanceConfig.profileMusicCard()
+                        && app.kiwigram.nowplaying.NowPlayingController.shouldShowCard(userInfo.saved_music)) {
                     hasMusicCard = true;
                 } else {
                     hasMusic = true;
@@ -11107,7 +11107,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
 
                 // Строка настроек NagramX появляется только если её включили на
                 // экране «Other» — как и в общем списке настроек.
-                if (app.exteraless.general.GeneralConfig.showNagramSettings()) {
+                if (app.kiwigram.general.GeneralConfig.showNagramSettings()) {
                     nekoRow = rowCount++;
                     nekoSectionRow = rowCount++;
                 }
@@ -11585,12 +11585,12 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         if (getParentActivity() == null) {
             return;
         }
-        final boolean card = app.exteraless.appearance.AppearanceConfig.profileMusicCard();
+        final boolean card = app.kiwigram.appearance.AppearanceConfig.profileMusicCard();
         AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity(), resourcesProvider);
         builder.setTitle(getString(R.string.OEProfileMusicDesign));
         builder.setMessage(getString(card ? R.string.OEProfileMusicUseOfficialInfo : R.string.OEProfileMusicUseCardInfo));
         builder.setPositiveButton(getString(card ? R.string.OEProfileMusicUseOfficial : R.string.OEProfileMusicUseCard), (dialog, which) -> {
-            app.exteraless.appearance.AppearanceConfig.profileMusicCard.setConfigBool(!card);
+            app.kiwigram.appearance.AppearanceConfig.profileMusicCard.setConfigBool(!card);
             updateListAnimated(false);
             needLayout(true);
         });
@@ -11626,7 +11626,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             MediaController.getInstance().getPlaylist().clear();
             MediaController.getInstance().getPlaylist().addAll(savedMusicList.list);
             if (!sameList) MediaController.getInstance().playMessage(savedMusicList.list.get(0));
-            showDialog(app.exteraless.player.Md3Player.create(getContext(), getResourceProvider()));
+            showDialog(app.kiwigram.player.Md3Player.create(getContext(), getResourceProvider()));
         }
     }
 
@@ -11962,8 +11962,8 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                         newString2 = getString(R.string.StarRatingLevelNegative).toLowerCase(Locale.ROOT);
                     } else {
                         if (!NekoConfig.sendOnlinePackets.Bool() || NekoConfig.sendOfflinePacketAfterOnline.Bool()) {
-                            final int lastSeen = app.exteraless.ghost.OwnLastSeen.seconds(currentAccount, user);
-                            newString2 = lastSeen > 0 ? app.exteraless.ghost.OwnLastSeen.format(lastSeen) : getString(R.string.VoipOfflineTitle);
+                            final int lastSeen = app.kiwigram.ghost.OwnLastSeen.seconds(currentAccount, user);
+                            newString2 = lastSeen > 0 ? app.kiwigram.ghost.OwnLastSeen.format(lastSeen) : getString(R.string.VoipOfflineTitle);
                         } else {
                             newString2 = LocaleController.getString(R.string.Online);
                         }
@@ -13043,7 +13043,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
             actionsView.commitActions();
         }
 
-        // exteraless plugins: подменю PROFILE_ACTION_MENU в конце меню «⋮».
+        // kiwigram plugins: подменю PROFILE_ACTION_MENU в конце меню «⋮».
         if (otherItem != null) {
             java.util.Map<String, Object> pluginMenuContext = new java.util.HashMap<>();
             pluginMenuContext.put("account", currentAccount);
@@ -13060,9 +13060,9 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 pluginMenuContext.put("chat", getMessagesController().getChat(chatId));
                 pluginMenuContext.put("chatId", chatId);
             }
-            pluginsMenu = app.exteraless.plugins.menus.MenuInjector.attachSwipeBackMenu(
+            pluginsMenu = app.kiwigram.plugins.menus.MenuInjector.attachSwipeBackMenu(
                     otherItem,
-                    app.exteraless.plugins.MenuItemRecord.MenuType.PROFILE_ACTION_MENU,
+                    app.kiwigram.plugins.MenuItemRecord.MenuType.PROFILE_ACTION_MENU,
                     pluginMenuContext, resourcesProvider, pluginsMenu);
         }
 
@@ -13760,7 +13760,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
                 ArrayList<File> files = new ArrayList<>();
 
                 files.addAll(Arrays.asList(dir.listFiles()));
-                files.addAll(Arrays.asList(app.exteraless.plugins.PluginLog.files()));
+                files.addAll(Arrays.asList(app.kiwigram.plugins.PluginLog.files()));
 
                 File filesDir = ApplicationLoader.getFilesDirFixed();
                 filesDir = new File(filesDir, "malformed_database/");
@@ -17970,7 +17970,7 @@ public class ProfileActivity extends BaseFragment implements NotificationCenter.
         final int additionalList = dp(48);
 
         iBlur3PositionActionBar.set(0, -additionalList, fragmentView.getMeasuredWidth(), actionBar.getMeasuredHeight() + additionalList);
-        app.exteraless.appearance.MainTabsUiHelper.setBlurBounds(iBlur3PositionMainTabs, fragmentView, navigationBarHeight);
+        app.kiwigram.appearance.MainTabsUiHelper.setBlurBounds(iBlur3PositionMainTabs, fragmentView, navigationBarHeight);
         iBlur3PositionMainTabs.inset(0, LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? 0 : -dp(48));
 
         scrollableViewNoiseSuppressor.setupRenderNodes(iBlur3Positions, 2);

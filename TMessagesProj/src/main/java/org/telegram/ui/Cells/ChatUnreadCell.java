@@ -8,7 +8,7 @@
 
 package org.telegram.ui.Cells;
 
-import app.exteraless.chats.ChatsConfig;
+import app.kiwigram.chats.ChatsConfig;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;

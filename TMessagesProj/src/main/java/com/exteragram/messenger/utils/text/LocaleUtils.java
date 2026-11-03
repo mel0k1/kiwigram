@@ -196,9 +196,9 @@ public abstract class LocaleUtils {
 
     public static String getAppName() {
         try {
-            return ApplicationLoader.applicationContext.getString(R.string.OpenExtera);
+            return ApplicationLoader.applicationContext.getString(R.string.OpenKiwi);
         } catch (Exception e) {
-            return "exteraless";
+            return "kiwigram";
         }
     }
 
@@ -271,7 +271,7 @@ public abstract class LocaleUtils {
     }
 
     public static boolean canUseLocalPremiumEmojis(int account) {
-        return app.exteraless.chats.LinkedCustomEmoji.canSend(account);
+        return app.kiwigram.chats.LinkedCustomEmoji.canSend(account);
     }
 
     public static String normalizeResourceLanguage(String language) {

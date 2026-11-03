@@ -1,10 +1,10 @@
 package org.telegram.ui;
 
 import tw.nekomimi.nekogram.utils.ShareUtil;
-import app.exteraless.debug.EnergyProfiler;
-import app.exteraless.debug.JankProfiler;
-import app.exteraless.debug.PluginToggleTrace;
-import app.exteraless.settings.OpenExteraSettingsActivity;
+import app.kiwigram.debug.EnergyProfiler;
+import app.kiwigram.debug.JankProfiler;
+import app.kiwigram.debug.PluginToggleTrace;
+import app.kiwigram.settings.OpenKiwiSettingsActivity;
 
 import static org.telegram.messenger.AndroidUtilities.dp;
 import static org.telegram.messenger.AndroidUtilities.lerp;
@@ -251,7 +251,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
             hasMainTabs = arguments.getBoolean("hasMainTabs", false);
         }
 
-        additionNavigationBarHeight = hasMainTabs ? dp(app.exteraless.appearance.MainTabsUiHelper.getTabsViewHeightDp()) : 0;
+        additionNavigationBarHeight = hasMainTabs ? dp(app.kiwigram.appearance.MainTabsUiHelper.getTabsViewHeightDp()) : 0;
         return super.onFragmentCreate();
     }
 
@@ -298,7 +298,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
 
     @Override
     public View createView(Context context) {
-        additionNavigationBarHeight = hasMainTabs ? dp(app.exteraless.appearance.MainTabsUiHelper.getTabsViewHeightDp()) : 0;
+        additionNavigationBarHeight = hasMainTabs ? dp(app.kiwigram.appearance.MainTabsUiHelper.getTabsViewHeightDp()) : 0;
 
         contentView = new SizeNotifierFrameLayout(context) {
             @Override
@@ -798,12 +798,12 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         // Настройки NagramX по умолчанию спрятаны: у форка свои экраны, а второй
         // набор тех же настроек рядом только путает. Строку включают на экране
         // «Other» (GeneralConfig.showNagramSettings).
-        if (app.exteraless.general.GeneralConfig.showNagramSettings()) {
+        if (app.kiwigram.general.GeneralConfig.showNagramSettings()) {
             items.add(SettingCell.Factory.of(100, 0xFF3CCFFF, 0xFF007AFF, R.drawable.filled_profile_settings, getString(R.string.NekoSettings)));
         }
         // Как в exteraGram 12.9.0 (SettingsActivity.java:899): знак приложения вместо
         // шестерёнки, акцент фирменного цвета на обе точки градиента.
-        items.add(SettingCell.Factory.of(-1, 0xFF993C38, 0xFF993C38, R.drawable.exteraless_icon_tile, getString(R.string.OpenExteraPreferences), getString(R.string.OpenExteraInfo)));
+        items.add(SettingCell.Factory.of(-1, 0xFF993C38, 0xFF993C38, R.drawable.kiwigram_icon_tile, getString(R.string.OpenKiwiPreferences), getString(R.string.OpenKiwiInfo)));
         items.add(UItem.asShadow(null));
         final boolean walletAbove = getConnectionsManager().getCurrentTime() - 1791538462 < 4 * 7 * 24 * 60 * 60;
         if (walletAbove && getMessagesController().config.walletAvailable.get()) {
@@ -1029,7 +1029,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 break;
             }
             case -1: {
-                presentFragment(new OpenExteraSettingsActivity());
+                presentFragment(new OpenKiwiSettingsActivity());
                 break;
             }
             case 26: {
@@ -1405,11 +1405,11 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 Theme.ResourcesProvider resourcesProvider
         ) {
             final boolean dark = resourcesProvider != null ? resourcesProvider.isDark() : Theme.isCurrentThemeDark();
-            final boolean m3 = app.exteraless.appearance.M3ListItems.enabled();
+            final boolean m3 = app.kiwigram.appearance.M3ListItems.enabled();
             iconBackground.setCircle(m3);
             if (m3) {
-                iconBackground.setMonetColor(app.exteraless.appearance.M3ListItems.tonalBackground(iconColorTop, iconColorBottom));
-                iconView.setColorFilter(app.exteraless.appearance.M3ListItems.tonalForeground(iconColorTop, iconColorBottom), PorterDuff.Mode.SRC_IN);
+                iconBackground.setMonetColor(app.kiwigram.appearance.M3ListItems.tonalBackground(iconColorTop, iconColorBottom));
+                iconView.setColorFilter(app.kiwigram.appearance.M3ListItems.tonalForeground(iconColorTop, iconColorBottom), PorterDuff.Mode.SRC_IN);
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && Theme.getActiveTheme().isMonet()) {
                 iconBackground.setMonetColor(MonetHelper.getColor(dark ? "a1_200" : "a1_600"));
                 iconView.setColorFilter(MonetHelper.getColor(dark ? "a1_800" : "a1_100"), PorterDuff.Mode.SRC_IN);
@@ -1546,7 +1546,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 item.id = id;
                 item.iconResId = icon;
                 item.text = title;
-                if (app.exteraless.appearance.M3ListItems.enabled()) {
+                if (app.kiwigram.appearance.M3ListItems.enabled()) {
                     item.subtext = subtitle;
                 }
                 // Подпись намеренно отбрасывается — так же, как в exteraGram 12.9.0
@@ -2463,7 +2463,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         final int additionalList = dp(48);
 
         iBlur3PositionActionBar.set(0, -additionalList, fragmentView.getMeasuredWidth(), actionBar.getMeasuredHeight() + additionalList);
-        app.exteraless.appearance.MainTabsUiHelper.setBlurBounds(iBlur3PositionMainTabs, fragmentView, navigationBarHeight);
+        app.kiwigram.appearance.MainTabsUiHelper.setBlurBounds(iBlur3PositionMainTabs, fragmentView, navigationBarHeight);
         iBlur3PositionMainTabs.inset(0, LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? 0 : -dp(48));
 
         scrollableViewNoiseSuppressor.setupRenderNodes(iBlur3Positions, hasMainTabs ? 2 : 1);

@@ -8,18 +8,18 @@
 
 package org.telegram.ui;
 
-import app.exteraless.chats.DeletedReplyQuote;
-import app.exteraless.chats.LinkedCustomEmoji;
-import app.exteraless.OpenExteraConfig;
-import app.exteraless.feed.FeedChannelAvatarMenu;
-import app.exteraless.feed.FeedChatIntegration;
-import app.exteraless.feed.FeedController;
-import app.exteraless.feed.FeedMessageUtils;
-import app.exteraless.appearance.AppearanceConfig;
-import app.exteraless.chats.ChatsConfig;
-import app.exteraless.components.ActionRow;
-import app.exteraless.components.MessageDetailsPopupWrapper;
-import app.exteraless.appearance.GlassMenuHelper;
+import app.kiwigram.chats.DeletedReplyQuote;
+import app.kiwigram.chats.LinkedCustomEmoji;
+import app.kiwigram.OpenKiwiConfig;
+import app.kiwigram.feed.FeedChannelAvatarMenu;
+import app.kiwigram.feed.FeedChatIntegration;
+import app.kiwigram.feed.FeedController;
+import app.kiwigram.feed.FeedMessageUtils;
+import app.kiwigram.appearance.AppearanceConfig;
+import app.kiwigram.chats.ChatsConfig;
+import app.kiwigram.components.ActionRow;
+import app.kiwigram.components.MessageDetailsPopupWrapper;
+import app.kiwigram.appearance.GlassMenuHelper;
 
 import static org.telegram.messenger.AndroidUtilities.dp;
 import static org.telegram.messenger.AndroidUtilities.lerp;
@@ -647,8 +647,8 @@ public class ChatActivity extends BaseFragment implements
     private ActionBarMenuItem.Item feeItemGap;
     private ActionBarMenuItem.Item feeItemText;
     private ChatNotificationsPopupWrapper chatNotificationsPopupWrapper;
-    // exteraless plugins: подменю CHAT_ACTION_MENU в меню «⋮».
-    private app.exteraless.plugins.menus.MenuInjector.SwipeBackMenu pluginsMenu;
+    // kiwigram plugins: подменю CHAT_ACTION_MENU в меню «⋮».
+    private app.kiwigram.plugins.menus.MenuInjector.SwipeBackMenu pluginsMenu;
     // private ChatActivitySideControlsButtonsLayout topButtonsLayout;
     private ChatActivitySideControlsButtonsLayout sideControlsButtonsLayout;
     private boolean pagedownButtonShowedByScroll;
@@ -1602,11 +1602,11 @@ public class ChatActivity extends BaseFragment implements
         return isTopic || chatMode == MODE_SAVED || chatMode == MODE_QUICK_REPLIES || chatMode == MODE_SUGGESTIONS ? threadMessageId : 0L;
     }
 
-    private app.exteraless.ai.network.Client aiClient;
+    private app.kiwigram.ai.network.Client aiClient;
 
-    public app.exteraless.ai.network.Client getClient() {
+    public app.kiwigram.ai.network.Client getClient() {
         if (aiClient == null) {
-            aiClient = new app.exteraless.ai.network.Client.Builder().build();
+            aiClient = new app.kiwigram.ai.network.Client.Builder().build();
         }
         return aiClient;
     }
@@ -3345,7 +3345,7 @@ public class ChatActivity extends BaseFragment implements
         // na: unread count
         getNotificationCenter().addObserver(this, NotificationCenter.dialogsUnreadCounterChanged);
 
-        // exteraless plugins: реестр пунктов меняется, когда плагин включают/выключают.
+        // kiwigram plugins: реестр пунктов меняется, когда плагин включают/выключают.
         NotificationCenter.getGlobalInstance().addObserver(this, NotificationCenter.pluginMenuItemsUpdated);
 
         if (chatMode != MODE_SCHEDULED) {
@@ -3835,7 +3835,7 @@ public class ChatActivity extends BaseFragment implements
 
     @Override
     public void onFragmentDestroy() {
-        app.exteraless.plugins.menus.MenuInjector.releaseMessageMenu(this);
+        app.kiwigram.plugins.menus.MenuInjector.releaseMessageMenu(this);
         super.onFragmentDestroy();
         if (commentsMessagesObserver != null) {
             getNotificationCenter().removeObserver(commentsMessagesObserver, NotificationCenter.messagesDidLoad);
@@ -4807,7 +4807,7 @@ public class ChatActivity extends BaseFragment implements
                 return isInPreviewMode();
             }
         };
-        app.exteraless.appearance.ChatHeaderUiHelper.setupGlassAvatarContainer(avatarContainer);
+        app.kiwigram.appearance.ChatHeaderUiHelper.setupGlassAvatarContainer(avatarContainer);
         avatarContainer.allowShorterStatus = true;
         avatarContainer.premiumIconHiddable = true;
         avatarContainer.allowDrawStories = dialog_id < 0 && !isTopic;
@@ -5288,7 +5288,7 @@ public class ChatActivity extends BaseFragment implements
             headerItem.lazilyAddSubItem(888, R.drawable.menu_download_round, "Dump Canvas");
         }
 
-        // exteraless plugins: подменю CHAT_ACTION_MENU в конце меню «⋮».
+        // kiwigram plugins: подменю CHAT_ACTION_MENU в конце меню «⋮».
         // Место общее для всех веток выше — headerItem здесь уже собран целиком.
         if (headerItem != null) {
             java.util.Map<String, Object> pluginMenuContext = new java.util.HashMap<>();
@@ -5307,9 +5307,9 @@ public class ChatActivity extends BaseFragment implements
             if (currentEncryptedChat != null) {
                 pluginMenuContext.put("encryptedChat", currentEncryptedChat);
             }
-            pluginsMenu = app.exteraless.plugins.menus.MenuInjector.attachSwipeBackMenu(
+            pluginsMenu = app.kiwigram.plugins.menus.MenuInjector.attachSwipeBackMenu(
                     headerItem,
-                    app.exteraless.plugins.MenuItemRecord.MenuType.CHAT_ACTION_MENU,
+                    app.kiwigram.plugins.MenuItemRecord.MenuType.CHAT_ACTION_MENU,
                     pluginMenuContext, themeDelegate, pluginsMenu);
         }
 
@@ -5346,7 +5346,7 @@ public class ChatActivity extends BaseFragment implements
             glassBackgroundDrawableFactory,
             BlurredBackgroundProviderImpl.topPanelChatActivity(themeDelegate),
             ChatObject.isForum(currentChat));
-        app.exteraless.appearance.ChatHeaderUiHelper.applyChatHeaderGlassStyle(actionBar);
+        app.kiwigram.appearance.ChatHeaderUiHelper.applyChatHeaderGlassStyle(actionBar);
         //actionBar.setChatAvatarContainer(avatarContainer);
         //avatarContainer.setActionBar(actionBar);
 
@@ -9989,7 +9989,7 @@ public class ChatActivity extends BaseFragment implements
         if (cell == null || cell.timeLayout == null || cell.getMessageObject() == null ||
                 cell.getMessageObject().messageOwner == null ||
                 (chatMode != MODE_DEFAULT && chatMode != MODE_PINNED && chatMode != MODE_SAVED) ||
-                app.exteraless.chats.StickerTime.isHidden(cell.getMessageObject())
+                app.kiwigram.chats.StickerTime.isHidden(cell.getMessageObject())
         ) {
             return;
         }
@@ -13325,7 +13325,7 @@ public class ChatActivity extends BaseFragment implements
         }
 
         if (topPanelLayout != null) {
-            topPanelLayout.setTranslationY(app.exteraless.appearance.ChatHeaderUiHelper.getTopPanelTranslationY(ty, getTopicTabsSideSize(TopicsTabsView.Position.TOP), getHashtagTabsShownT()));
+            topPanelLayout.setTranslationY(app.kiwigram.appearance.ChatHeaderUiHelper.getTopPanelTranslationY(ty, getTopicTabsSideSize(TopicsTabsView.Position.TOP), getHashtagTabsShownT()));
         }
     }
 
@@ -14890,7 +14890,7 @@ public class ChatActivity extends BaseFragment implements
     }
 
     private void openAttachMenu() {
-        if (app.exteraless.privacy.BotAccountRouter.guardComposer(this, currentAccount, dialog_id)) return;
+        if (app.kiwigram.privacy.BotAccountRouter.guardComposer(this, currentAccount, dialog_id)) return;
         if (getParentActivity() == null || chatActivityEnterView != null && !TextUtils.isEmpty(chatActivityEnterView.getSlowModeTimer())) {
             return;
         }
@@ -22272,7 +22272,7 @@ public class ChatActivity extends BaseFragment implements
     @Override
     public void didReceivedNotification(int id, int account, final Object... args) {
         if (id == NotificationCenter.pluginMenuItemsUpdated) {
-            // exteraless plugins: пересобрать подменю CHAT_ACTION_MENU.
+            // kiwigram plugins: пересобрать подменю CHAT_ACTION_MENU.
             if (pluginsMenu != null) {
                 pluginsMenu.refresh();
             }
@@ -33403,7 +33403,7 @@ public class ChatActivity extends BaseFragment implements
             final boolean isReactionsAvailableFinal = !suggestEdit && isReactionsAvailable;
 
             int flags = 0;
-            if (isReactionsViewAvailable || showMessageSeen || showSponsorInfo || options.contains(OPTION_REPLY) || options.contains(OPTION_COPY) || options.contains(OPTION_COPY_PHOTO) || options.contains(OPTION_FORWARD) || options.contains(nkbtn_translate) || options.contains(nkbtn_detail) || options.contains(app.exteraless.plugins.menus.MenuInjector.MESSAGE_PLUGINS_OPTION)) {
+            if (isReactionsViewAvailable || showMessageSeen || showSponsorInfo || options.contains(OPTION_REPLY) || options.contains(OPTION_COPY) || options.contains(OPTION_COPY_PHOTO) || options.contains(OPTION_FORWARD) || options.contains(nkbtn_translate) || options.contains(nkbtn_detail) || options.contains(app.kiwigram.plugins.menus.MenuInjector.MESSAGE_PLUGINS_OPTION)) {
                 flags |= ActionBarPopupWindow.ActionBarPopupWindowLayout.FLAG_USE_SWIPEBACK;
             }
 
@@ -34442,14 +34442,14 @@ public class ChatActivity extends BaseFragment implements
                             return true;
                         });
                     }
-                    if (option == app.exteraless.plugins.menus.MenuInjector.MESSAGE_PLUGINS_OPTION) {
-                        int swipeBackIndex = popupLayout.addViewToSwipeBack(app.exteraless.plugins.menus.MenuInjector
+                    if (option == app.kiwigram.plugins.menus.MenuInjector.MESSAGE_PLUGINS_OPTION) {
+                        int swipeBackIndex = popupLayout.addViewToSwipeBack(app.kiwigram.plugins.menus.MenuInjector
                                 .createMessagePluginsMenu(popupLayout.getSwipeBack(), this::closeMenu, getResourceProvider()));
                         cell.setRightIcon(R.drawable.msg_arrowright);
                         cell.setOnClickListener(v1 -> popupLayout.getSwipeBack().openForeground(swipeBackIndex));
                         cell.setOnLongClickListener(v1 -> {
                             closeMenu();
-                            presentFragment(new app.exteraless.plugins.ui.PluginsActivity());
+                            presentFragment(new app.kiwigram.plugins.ui.PluginsActivity());
                             return true;
                         });
                     }
@@ -35800,12 +35800,12 @@ public class ChatActivity extends BaseFragment implements
         if (selectedObject == null || getParentActivity() == null) {
             return;
         }
-        // exteraless plugins: id пунктов плагинов живут в своём диапазоне (MenuInjector).
+        // kiwigram plugins: id пунктов плагинов живут в своём диапазоне (MenuInjector).
         if (option == oebtn_ask_ai) {
             MessageObject target = selectedObject;
             String content = getMessageContent(target);
             if (!TextUtils.isEmpty(content)) {
-                app.exteraless.ai.ui.AiResponseSheet.show(getParentActivity(), themeDelegate,
+                app.kiwigram.ai.ui.AiResponseSheet.show(getParentActivity(), themeDelegate,
                         content, true, text -> {
                             if (chatActivityEnterView != null) {
                                 chatActivityEnterView.setFieldText(text);
@@ -35815,7 +35815,7 @@ public class ChatActivity extends BaseFragment implements
             closeMenu();
             return;
         }
-        if (app.exteraless.plugins.menus.MenuInjector.handleMessageMenuOption(option)) {
+        if (app.kiwigram.plugins.menus.MenuInjector.handleMessageMenuOption(option)) {
             return;
         }
         boolean preserveDim = false;
@@ -36172,9 +36172,9 @@ public class ChatActivity extends BaseFragment implements
                     } else if (locFile.getName().toLowerCase().endsWith(".nekox-settings.json") || fileName.endsWith(".nekox-settings.json")) {
                         File finalLocFile = locFile;
                         SettingsBackupHelper.importSettings(getParentActivity(), finalLocFile);
-                    } else if (locFile.getName().toLowerCase().endsWith(app.exteraless.backup.EtgBackup.EXTENSION)
-                            || fileName.endsWith(app.exteraless.backup.EtgBackup.EXTENSION)) {
-                        app.exteraless.backup.EtgBackupUi.confirmImport(this, locFile);
+                    } else if (locFile.getName().toLowerCase().endsWith(app.kiwigram.backup.EtgBackup.EXTENSION)
+                            || fileName.endsWith(app.kiwigram.backup.EtgBackup.EXTENSION)) {
+                        app.kiwigram.backup.EtgBackupUi.confirmImport(this, locFile);
                     } else if (getMessageType(selectedObject) == MESSAGE_TYPE_FONT) {
                         AlertDialog progressDialog = new AlertDialog(getParentActivity(), 3);
                         File finalLocFile = locFile;
@@ -38236,14 +38236,14 @@ public class ChatActivity extends BaseFragment implements
      * Перенесено из exteraGram 12.9.0, ChatActivity.disabledReactions().
      */
     public boolean disabledReactions() {
-        app.exteraless.chats.ChatsConfig.ensureLoaded();
-        if (app.exteraless.chats.ChatsConfig.hideReactionsInChannels.Bool() && isChannel()) {
+        app.kiwigram.chats.ChatsConfig.ensureLoaded();
+        if (app.kiwigram.chats.ChatsConfig.hideReactionsInChannels.Bool() && isChannel()) {
             return true;
         }
-        if (app.exteraless.chats.ChatsConfig.hideReactionsInGroups.Bool() && !isChannel() && currentChat != null) {
+        if (app.kiwigram.chats.ChatsConfig.hideReactionsInGroups.Bool() && !isChannel() && currentChat != null) {
             return true;
         }
-        return app.exteraless.chats.ChatsConfig.hideReactionsInPrivate.Bool() && currentUser != null;
+        return app.kiwigram.chats.ChatsConfig.hideReactionsInPrivate.Bool() && currentUser != null;
     }
 
     public boolean canScheduleMessage() {
@@ -40117,7 +40117,7 @@ public class ChatActivity extends BaseFragment implements
                     cell.resetPressedLink(-1);
                 }
                 if (!messageObject.isVoice()) {
-                    showDialog(app.exteraless.player.Md3Player.create(getContext(), themeDelegate));
+                    showDialog(app.kiwigram.player.Md3Player.create(getContext(), themeDelegate));
                 }
             } else if (str.startsWith("tonaddress:")) {
                 didPressTonAddress(cell, url, str.substring(11));
@@ -43408,7 +43408,7 @@ public class ChatActivity extends BaseFragment implements
                 }
                 String username = ChatObject.getPublicUsername(chat);
                 if (username != null) {
-                    sb.append("@").append(username).append(OpenExteraConfig.addCommaAfterMention() ? ", " : " ");
+                    sb.append("@").append(username).append(OpenKiwiConfig.addCommaAfterMention() ? ", " : " ");
                 } else {
                     return;
                 }
@@ -43434,7 +43434,7 @@ public class ChatActivity extends BaseFragment implements
                 }
                 String username = UserObject.getPublicUsername(user);
                 if (username != null) {
-                    sb.append("@").append(username).append((user.bot || !OpenExteraConfig.addCommaAfterMention()) ? " " : ", ");
+                    sb.append("@").append(username).append((user.bot || !OpenKiwiConfig.addCommaAfterMention()) ? " " : ", ");
                 } else {
                     String name = UserObject.getFirstName(user, false);
                     Spannable spannable = new SpannableString(name + " ");
@@ -43903,7 +43903,7 @@ public class ChatActivity extends BaseFragment implements
                 ArrayList<CharSequence> items = new ArrayList<>();
                 final ArrayList<Integer> options = new ArrayList<>();
                 fillMessageMenu(messageObject, icons, items, options);
-                app.exteraless.plugins.menus.MenuInjector.expandMessagePluginsOption(icons, items, options);
+                app.kiwigram.plugins.menus.MenuInjector.expandMessagePluginsOption(icons, items, options);
                 menu.setupMessageOptions(ChatActivity.this, icons, items, options, ChatActivity.this::processSelectedOption);
                 menu.setOnDismissListener(() -> {
                     selectedObject = null;
@@ -44207,7 +44207,7 @@ public class ChatActivity extends BaseFragment implements
             ArrayList<CharSequence> items = new ArrayList<>();
             final ArrayList<Integer> options = new ArrayList<>();
             fillMessageMenu(messageObject, icons, items, options);
-            app.exteraless.plugins.menus.MenuInjector.expandMessagePluginsOption(icons, items, options);
+            app.kiwigram.plugins.menus.MenuInjector.expandMessagePluginsOption(icons, items, options);
             menu.setupMessageOptions(ChatActivity.this, icons, items, options, ChatActivity.this::processSelectedOption);
             menu.setOnDismissListener(() -> {
                 selectedObject = null;
@@ -44977,10 +44977,10 @@ public class ChatActivity extends BaseFragment implements
                         }
                     };
 
-                    // exteraless plugins: файл плагина ставится, а не открывается
+                    // kiwigram plugins: файл плагина ставится, а не открывается
                     // в подсветке кода (.plugin зарегистрирован как Python
                     // в MarkdownUtils). Проверка идёт до просмотрщиков, как у exteraGram.
-                    if (app.exteraless.plugins.PluginInstallHelper.handleMessageTap(getParentActivity(), message)) {
+                    if (app.kiwigram.plugins.PluginInstallHelper.handleMessageTap(getParentActivity(), message)) {
                         return;
                     }
                     boolean handled = false;
@@ -45313,11 +45313,11 @@ public class ChatActivity extends BaseFragment implements
                             getString(R.string.ImportAyuDBAlert),
                             R.drawable.msg_photo_settings_solar, getString(R.string.Import), true,
                             () -> AyuData.importAyuDatabase(ChatActivity.this, finalLocFile));
-                } else if (app.exteraless.backup.AyuDatabaseImport.isAyuGramExport(message.getDocumentName())) {
-                    app.exteraless.backup.AyuDatabaseImport.confirm(ChatActivity.this, locFile);
-                } else if (app.exteraless.icons.IconPackManager.isIconPack(message)) {
+                } else if (app.kiwigram.backup.AyuDatabaseImport.isAyuGramExport(message.getDocumentName())) {
+                    app.kiwigram.backup.AyuDatabaseImport.confirm(ChatActivity.this, locFile);
+                } else if (app.kiwigram.icons.IconPackManager.isIconPack(message)) {
                     // openExtera: иконпак, присланный файлом в чат
-                    app.exteraless.icons.IconPackManager.getInstance()
+                    app.kiwigram.icons.IconPackManager.getInstance()
                             .handleIconPack(ChatActivity.this, locFile);
                 } else if (message.getDocumentName().toLowerCase().endsWith("attheme")) {
                     Theme.ThemeInfo themeInfo = Theme.applyThemeFile(locFile, message.getDocumentName(), null, true);
@@ -45337,13 +45337,13 @@ public class ChatActivity extends BaseFragment implements
                 } else if (message.getDocumentName().toLowerCase().endsWith(".nekox-settings.json")) {
                     File finalLocFile = locFile;
                     SettingsBackupHelper.importSettings(getParentActivity(), finalLocFile);
-                } else if (message.getDocumentName().toLowerCase().endsWith(app.exteraless.backup.EtgBackup.EXTENSION)) {
-                    app.exteraless.backup.EtgBackupUi.confirmImport(ChatActivity.this, locFile);
+                } else if (message.getDocumentName().toLowerCase().endsWith(app.kiwigram.backup.EtgBackup.EXTENSION)) {
+                    app.kiwigram.backup.EtgBackupUi.confirmImport(ChatActivity.this, locFile);
                 } else {
-                    // exteraless plugins: файл плагина ставится, а не открывается
+                    // kiwigram plugins: файл плагина ставится, а не открывается
                     // в подсветке кода (.plugin зарегистрирован как Python
                     // в MarkdownUtils). Проверка идёт до просмотрщиков, как у exteraGram.
-                    if (app.exteraless.plugins.PluginInstallHelper.handleMessageTap(getParentActivity(), message)) {
+                    if (app.kiwigram.plugins.PluginInstallHelper.handleMessageTap(getParentActivity(), message)) {
                         return;
                     }
                     boolean handled = false;
@@ -48184,8 +48184,8 @@ public class ChatActivity extends BaseFragment implements
         if (actionBar == null) {
             return !Theme.isCurrentThemeDark();
         }
-        if (app.exteraless.appearance.ChatHeaderUiHelper.isMaterial3ChatHeaderStyle()) {
-            return app.exteraless.appearance.ChatHeaderUiHelper.isLightChatStatusBar(actionBar, getThemedColor(Theme.key_windowBackgroundGray));
+        if (app.kiwigram.appearance.ChatHeaderUiHelper.isMaterial3ChatHeaderStyle()) {
+            return app.kiwigram.appearance.ChatHeaderUiHelper.isLightChatStatusBar(actionBar, getThemedColor(Theme.key_windowBackgroundGray));
         }
         return !shouldHaveLightStatusBarIcons;
     }
@@ -51327,14 +51327,14 @@ public class ChatActivity extends BaseFragment implements
             icons.add(R.drawable.msg_info);
         }
 
-        if (app.exteraless.ai.AiController.canUseAI()
+        if (app.kiwigram.ai.AiController.canUseAI()
                 && !TextUtils.isEmpty(getMessageContent(message))) {
             items.add(LocaleController.getString(R.string.OEAiAsk));
             options.add(oebtn_ask_ai);
             icons.add(R.drawable.msg_discussion);
         }
-        // exteraless plugins: пункты плагинов в конце контекстного меню сообщения.
-        app.exteraless.plugins.menus.MenuInjector.fillMessageMenu(this, message, currentChat, currentUser, currentEncryptedChat, dialog_id, currentAccount, icons, items, options);
+        // kiwigram plugins: пункты плагинов в конце контекстного меню сообщения.
+        app.kiwigram.plugins.menus.MenuInjector.fillMessageMenu(this, message, currentChat, currentUser, currentEncryptedChat, dialog_id, currentAccount, icons, items, options);
         if (isFeedSearch()) {
             FeedMessageUtils.filterAllowedOptions(items, options, icons);
         }
@@ -51350,7 +51350,7 @@ public class ChatActivity extends BaseFragment implements
     }
 
     private boolean canShowCenteredTitle(ChatActivity parentFragment) {
-        if (!app.exteraless.appearance.AppearanceConfig.iosChatHeader()) {
+        if (!app.kiwigram.appearance.AppearanceConfig.iosChatHeader()) {
             return false;
         }
         if (parentFragment == null) {
@@ -51396,7 +51396,7 @@ public class ChatActivity extends BaseFragment implements
             return false;
         }
         final boolean noforwards = isPeerNoForwards() || message.messageOwner.noforwards || message.type == MessageObject.TYPE_PAID_MEDIA;
-        final String toLang = app.exteraless.utils.text.TranslatorUtils.getResolvedTargetLanguageCode();
+        final String toLang = app.kiwigram.utils.text.TranslatorUtils.getResolvedTargetLanguageCode();
         final String fromLang = message.messageOwner.originalLanguage;
         final Utilities.CallbackReturn<URLSpan, Boolean> onLinkPress = link -> {
             didPressMessageUrl(link, false, message, null);
@@ -51606,8 +51606,8 @@ public class ChatActivity extends BaseFragment implements
         }
         fadeHeight += dp(36 + 7) * getHashtagTabsShownT();
 
-        app.exteraless.appearance.ChatHeaderUiHelper.setupChatTopFade(chatActivityFadeView, actionBar,
-            getThemedColor(app.exteraless.appearance.ChatHeaderUiHelper.getChatFadeColorKey()), (int) fadeHeight);
+        app.kiwigram.appearance.ChatHeaderUiHelper.setupChatTopFade(chatActivityFadeView, actionBar,
+            getThemedColor(app.kiwigram.appearance.ChatHeaderUiHelper.getChatFadeColorKey()), (int) fadeHeight);
     }
 
     private void checkUi_messagesSearchListPadding() {
@@ -51639,7 +51639,7 @@ public class ChatActivity extends BaseFragment implements
     }
 
     private float finalTopPanelHeight(float height) {
-        return app.exteraless.appearance.ChatHeaderUiHelper.getFinalTopPanelHeight(height,
+        return app.kiwigram.appearance.ChatHeaderUiHelper.getFinalTopPanelHeight(height,
                 parentChatActivity != null ? parentChatActivity.topPanelLayout : topPanelLayout);
     }
 

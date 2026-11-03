@@ -8,7 +8,7 @@
 
 package org.telegram.ui.Components;
 
-import app.exteraless.math.InlineMathController;
+import app.kiwigram.math.InlineMathController;
 import static org.telegram.messenger.AndroidUtilities.dp;
 
 import android.animation.AnimatorSet;

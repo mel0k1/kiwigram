@@ -8,13 +8,13 @@
 
 package org.telegram.ui;
 
-import app.exteraless.appearance.AppearanceConfig;
-import app.exteraless.components.TranslateBeforeSendWrapper;
-import app.exteraless.drawer.DrawerContainer;
-import app.exteraless.drawer.MainMenuHelper;
-import app.exteraless.drawer.MainMenuItem;
-import app.exteraless.drawer.MainMenuLayout;
-import app.exteraless.utils.AppUtils;
+import app.kiwigram.appearance.AppearanceConfig;
+import app.kiwigram.components.TranslateBeforeSendWrapper;
+import app.kiwigram.drawer.DrawerContainer;
+import app.kiwigram.drawer.MainMenuHelper;
+import app.kiwigram.drawer.MainMenuItem;
+import app.kiwigram.drawer.MainMenuLayout;
+import app.kiwigram.utils.AppUtils;
 
 import static org.telegram.messenger.AndroidUtilities.dp;
 import static org.telegram.messenger.AndroidUtilities.dpf2;
@@ -3059,8 +3059,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         }
 
         BirthdayController.getInstance(currentAccount).check();
-        additionNavigationBarHeight = hasMainTabs && MainTabsLayout.isBottomNavigationVisible() && !MainTabsLayout.isBottomNavigationFloating() ? dp(app.exteraless.appearance.MainTabsUiHelper.getTabsViewHeightDp()) : 0;
-        additionFloatingButtonOffset = hasMainTabs && MainTabsLayout.isBottomNavigationVisible() ? dp(app.exteraless.appearance.MainTabsUiHelper.getTabsFabOffsetDp()) : 0;
+        additionNavigationBarHeight = hasMainTabs && MainTabsLayout.isBottomNavigationVisible() && !MainTabsLayout.isBottomNavigationFloating() ? dp(app.kiwigram.appearance.MainTabsUiHelper.getTabsViewHeightDp()) : 0;
+        additionFloatingButtonOffset = hasMainTabs && MainTabsLayout.isBottomNavigationVisible() ? dp(app.kiwigram.appearance.MainTabsUiHelper.getTabsFabOffsetDp()) : 0;
 
         LastSeenHelper.preload();
 
@@ -3346,8 +3346,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         filterTabsView = null;
         selectedDialogs.clear();
 
-        additionNavigationBarHeight = hasMainTabs && MainTabsLayout.isBottomNavigationVisible() && !MainTabsLayout.isBottomNavigationFloating() ? dp(app.exteraless.appearance.MainTabsUiHelper.getTabsViewHeightDp()) : 0;
-        additionFloatingButtonOffset = hasMainTabs && MainTabsLayout.isBottomNavigationVisible() ? dp(app.exteraless.appearance.MainTabsUiHelper.getTabsFabOffsetDp()) : 0;
+        additionNavigationBarHeight = hasMainTabs && MainTabsLayout.isBottomNavigationVisible() && !MainTabsLayout.isBottomNavigationFloating() ? dp(app.kiwigram.appearance.MainTabsUiHelper.getTabsViewHeightDp()) : 0;
+        additionFloatingButtonOffset = hasMainTabs && MainTabsLayout.isBottomNavigationVisible() ? dp(app.kiwigram.appearance.MainTabsUiHelper.getTabsFabOffsetDp()) : 0;
 
         maximumVelocity = ViewConfiguration.get(context).getScaledMaximumFlingVelocity();
 
@@ -3430,7 +3430,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             }
         };
         // openExtera: полоса пилюль в строке поиска, вся логика — в PillStackController
-        app.exteraless.pillstack.PillStackController.attach(fragmentSearchField, fragmentSearchField.editText);
+        app.kiwigram.pillstack.PillStackController.attach(fragmentSearchField, fragmentSearchField.editText);
         fragmentSearchField.setPadding(dp(4), dp(4), dp(4), dp(4));
         fragmentSearchField.setPivotX(0);
         fragmentSearchField.setPivotY(0);
@@ -14401,8 +14401,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             }
         }
 
-        // exteraless plugins: пункты плагинов (MAIN_MENU) в конце меню «⋮».
-        app.exteraless.plugins.menus.MenuInjector.appendMainMenuItems(io, currentAccount, this);
+        // kiwigram plugins: пункты плагинов (MAIN_MENU) в конце меню «⋮».
+        app.kiwigram.plugins.menus.MenuInjector.appendMainMenuItems(io, currentAccount, this);
 
         io.show();
         io.setTranslationY(-dp(64));
@@ -14737,7 +14737,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
             if (fragmentView.getGlobalVisibleRect(bounds)) {
                 final int y = ((int) ev.getRawY()) - bounds.top;
                 final int bottom = fragmentView.getMeasuredHeight() - navigationBarHeight;
-                if (y >= bottom - dp(app.exteraless.appearance.MainTabsUiHelper.getTabsViewHeightDp()) && y <= bottom) {
+                if (y >= bottom - dp(app.kiwigram.appearance.MainTabsUiHelper.getTabsViewHeightDp()) && y <= bottom) {
                     return false;
                 }
             }
@@ -14888,7 +14888,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
 
         boolean hasBottomBlur = false;
         if (hasMainTabs && MainTabsLayout.isBottomNavigationVisible()) {
-            app.exteraless.appearance.MainTabsUiHelper.setBlurBounds(iBlur3PositionMainTabs, fragmentView, navigationBarHeight);
+            app.kiwigram.appearance.MainTabsUiHelper.setBlurBounds(iBlur3PositionMainTabs, fragmentView, navigationBarHeight);
             iBlur3PositionMainTabs.inset(0, LiteMode.isEnabled(LiteMode.FLAG_LIQUID_GLASS) ? 0 : -dp(48));
 
             hasBottomBlur = true;
@@ -14928,7 +14928,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         if (commentView != null || !hasMainTabs || !MainTabsLayout.isBottomNavigationFloating()) {
             return 0;
         }
-        return dp(app.exteraless.appearance.MainTabsUiHelper.getTabsViewHeightDp());
+        return dp(app.kiwigram.appearance.MainTabsUiHelper.getTabsViewHeightDp());
     }
 
     @Override
@@ -14941,7 +14941,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         // Как в Telegram для iOS: тап по вкладке «Чаты» сначала возвращает в первую папку,
         // и только потом крутит список наверх. switchToCurrentSelectedMode уже ставит
         // список нужной папки в начало, поэтому отдельный scrollToTop тут не нужен.
-        if (app.exteraless.appearance.MainTabsUiHelper.isIosNavigationBar()
+        if (app.kiwigram.appearance.MainTabsUiHelper.isIosNavigationBar()
                 && filterTabsView != null && filterTabsView.getVisibility() == View.VISIBLE
                 && !tabsAnimationInProgress && !filterTabsView.isAnimatingIndicator() && !startedTracking
                 && !filterTabsView.isFirstTabSelected()

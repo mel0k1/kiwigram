@@ -878,8 +878,8 @@ public class MessageDrawable extends Drawable {
     /** openExtera: убрать «хвостик» пузыря сообщения (ChatsConfig.removeMessageTail). */
     private static boolean oeRemoveMessageTail() {
         try {
-            app.exteraless.chats.ChatsConfig.ensureLoaded();
-            return app.exteraless.chats.ChatsConfig.removeMessageTail.Bool();
+            app.kiwigram.chats.ChatsConfig.ensureLoaded();
+            return app.kiwigram.chats.ChatsConfig.removeMessageTail.Bool();
         } catch (Exception e) {
             return false;
         }

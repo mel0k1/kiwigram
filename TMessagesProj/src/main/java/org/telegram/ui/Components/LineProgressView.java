@@ -16,7 +16,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.widget.FrameLayout;
 
-import app.exteraless.appearance.AppearanceConfig;
+import app.kiwigram.appearance.AppearanceConfig;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 

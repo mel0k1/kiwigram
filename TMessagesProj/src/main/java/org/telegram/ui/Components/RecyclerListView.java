@@ -3290,7 +3290,7 @@ public class RecyclerListView extends RecyclerView implements IBlur3Capture {
     public static Class[] filterThemeDescription(int changeFlags, Class[] classes) {
         if (classes == null
                 || changeFlags != ThemeDescription.FLAG_CELLBACKGROUNDCOLOR
-                || !app.exteraless.appearance.AppearanceConfig.sectionsSeparatedHeaders()) {
+                || !app.kiwigram.appearance.AppearanceConfig.sectionsSeparatedHeaders()) {
             return classes;
         }
         int count = 0;
@@ -3370,10 +3370,10 @@ public class RecyclerListView extends RecyclerView implements IBlur3Capture {
      * умолчанию (20 dp) повторяет exteraGram, 0 даёт стоковые острые углы.
      */
     public void setSections() {
-        setSections(dp(12), dp(app.exteraless.appearance.AppearanceConfig.sectionRadius()), false);
+        setSections(dp(12), dp(app.kiwigram.appearance.AppearanceConfig.sectionRadius()), false);
     }
     public void setSections(boolean topPadding) {
-        setSections(dp(12), dp(app.exteraless.appearance.AppearanceConfig.sectionRadius()), topPadding);
+        setSections(dp(12), dp(app.kiwigram.appearance.AppearanceConfig.sectionRadius()), topPadding);
     }
     public void setSections(int padding, float roundRadius, boolean topPadding) {
         setSections(
@@ -3381,7 +3381,7 @@ public class RecyclerListView extends RecyclerView implements IBlur3Capture {
             // оказывается её первой строкой, а смысл выноса ровно обратный
             view -> !(view instanceof TextInfoPrivacyCell || view instanceof ShadowSectionCell || view instanceof FiltersSetupActivity.HintInnerCell || view instanceof GraySectionCell || view instanceof CollapseTextCell)
                     && !((view instanceof HeaderCell || view instanceof tw.nekomimi.nekogram.ui.cells.HeaderCell)
-                            && app.exteraless.appearance.AppearanceConfig.sectionsSeparatedHeaders())
+                            && app.kiwigram.appearance.AppearanceConfig.sectionsSeparatedHeaders())
                     && !Objects.equals(view.getTag(), TAG_NOT_SECTION),
             padding,
             roundRadius,
@@ -3552,9 +3552,9 @@ public class RecyclerListView extends RecyclerView implements IBlur3Capture {
     private boolean useSegmentedSections() {
         return segmentedSectionsEnabled
                 && sectionsItemDecoration != null
-                && (app.exteraless.appearance.AppearanceConfig.dividerStyle()
-                        == app.exteraless.appearance.AppearanceConfig.DIVIDER_SEGMENTS
-                        || app.exteraless.appearance.M3ListItems.enabled());
+                && (app.kiwigram.appearance.AppearanceConfig.dividerStyle()
+                        == app.kiwigram.appearance.AppearanceConfig.DIVIDER_SEGMENTS
+                        || app.kiwigram.appearance.M3ListItems.enabled());
     }
 
     /** Внутренний угол сегмента: у exteraGram min(радиус секции, 4dp). */

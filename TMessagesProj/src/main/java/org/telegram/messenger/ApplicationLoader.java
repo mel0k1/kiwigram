@@ -8,7 +8,7 @@
 
 package org.telegram.messenger;
 
-import app.exteraless.OpenExteraConfig;
+import app.kiwigram.OpenKiwiConfig;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -286,15 +286,15 @@ public class ApplicationLoader extends Application implements CameraXConfig.Prov
         SharedConfig.loadConfig();
         NekoConfig.init();
         NaConfig.init();
-        OpenExteraConfig.init();
-        app.exteraless.icons.IconPacksConfig.init();
-        app.exteraless.pillstack.PillStackConfig.init();
-        app.exteraless.appearance.AppearanceConfig.init();
-        app.exteraless.chats.ChatsConfig.init();
-        app.exteraless.general.GeneralConfig.init();
-        app.exteraless.utils.UtilsConfig.init();
-        app.exteraless.glyph.GlyphConfig.init();
-        app.exteraless.glyph.GlyphController.getInstance().init();
+        OpenKiwiConfig.init();
+        app.kiwigram.icons.IconPacksConfig.init();
+        app.kiwigram.pillstack.PillStackConfig.init();
+        app.kiwigram.appearance.AppearanceConfig.init();
+        app.kiwigram.chats.ChatsConfig.init();
+        app.kiwigram.general.GeneralConfig.init();
+        app.kiwigram.utils.UtilsConfig.init();
+        app.kiwigram.glyph.GlyphConfig.init();
+        app.kiwigram.glyph.GlyphController.getInstance().init();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             // Суффикс набора Monet запекается в ThemeInfo.assetName при первой загрузке
             // класса Theme. Если она случилась до загрузки конфигов (процесс поднялся
@@ -302,13 +302,13 @@ public class ApplicationLoader extends Application implements CameraXConfig.Prov
             // умолчанию — патчим assetName после инициализации конфигов.
             org.telegram.ui.ActionBar.Theme.reloadMonetThemes();
         }
-        app.exteraless.plugins.PluginsController.getInstance().init(applicationContext);
+        app.kiwigram.plugins.PluginsController.getInstance().init(applicationContext);
         if (BuildConfig.DEBUG_TOOLS) {
-            app.exteraless.debug.EnergyProfiler.resumeIfEnabled(applicationContext);
+            app.kiwigram.debug.EnergyProfiler.resumeIfEnabled(applicationContext);
         }
         SharedPrefsHelper.init(applicationContext);
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(AndroidUtil.shouldEnableCrashlytics());
-        Utilities.globalQueue.postRunnable(app.exteraless.crash.CrashLog::reportOutOfMemory);
+        Utilities.globalQueue.postRunnable(app.kiwigram.crash.CrashLog::reportOutOfMemory);
         for (int a = 0; a < UserConfig.MAX_ACCOUNT_COUNT; a++) { //TODO improve account
             UserConfig.getInstance(a).loadConfig();
             MessagesController.getInstance(a);
@@ -419,16 +419,16 @@ public class ApplicationLoader extends Application implements CameraXConfig.Prov
 
         applicationHandler = new Handler(applicationContext.getMainLooper());
 
-        org.osmdroid.config.Configuration.getInstance().setUserAgentValue("exteraless/" + BuildConfig.VERSION_NAME + " (+https://github.com/exteraless/exteraless)");
+        org.osmdroid.config.Configuration.getInstance().setUserAgentValue("kiwigram/" + BuildConfig.VERSION_NAME + " (+https://github.com/mel0k1/kiwigram)");
         final File osmdroidBasePath = new File(ApplicationLoader.applicationContext.getCacheDir(), "osmdroid");
         org.osmdroid.config.Configuration.getInstance().setOsmdroidBasePath(osmdroidBasePath);
         org.osmdroid.config.Configuration.getInstance().setOsmdroidTileCache(new File(osmdroidBasePath, "tiles"));
 
         LauncherIconController.tryFixLauncherIconIfNeeded();
         ProxyRotationController.init();
-        app.exteraless.proxy.ProxyPingController.init();
-        app.exteraless.links.LinkCleaner.preloadIfEnabled();
-        app.exteraless.appearance.M3CircularProgress.prewarm();
+        app.kiwigram.proxy.ProxyPingController.init();
+        app.kiwigram.links.LinkCleaner.preloadIfEnabled();
+        app.kiwigram.appearance.M3CircularProgress.prewarm();
 
         //if (BuildConfig.DEBUG_PRIVATE_VERSION) {
         //    Choreographer60FpsContent.getInstance().addFrameCallback(debugEverySecondChecks, 1);
@@ -902,8 +902,8 @@ public class ApplicationLoader extends Application implements CameraXConfig.Prov
     private void installCrashReportFilter() {
         Thread.UncaughtExceptionHandler crashlyticsHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler((thread, error) -> {
-            app.exteraless.plugins.PluginsWatchdog.onUncaughtException(error);
-            app.exteraless.crash.CrashLog.record(thread, error);
+            app.kiwigram.plugins.PluginsWatchdog.onUncaughtException(error);
+            app.kiwigram.crash.CrashLog.record(thread, error);
             if (AndroidUtil.shouldReportCrashToCrashlytics(error)) {
                 if (crashlyticsHandler != null) {
                     crashlyticsHandler.uncaughtException(thread, error);

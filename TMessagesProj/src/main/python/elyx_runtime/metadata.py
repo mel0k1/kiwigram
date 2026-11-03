@@ -1,6 +1,6 @@
 """metainfo.yml parsing and normalization for Elyx plugins.
 
-Produces the same metadata dict shape that extera_utils.metadata_parser yields
+Produces the same metadata dict shape that kiwi_utils.metadata_parser yields
 for plain .py plugins (id, name, description, author, version, icon,
 app_version, sdk_version, beta, requirements) plus Elyx-specific extras
 (min_version, requires). Also exposes read_metadata()/read_metadata_json() so
@@ -136,7 +136,7 @@ def _parse_requires(value: Any) -> Dict[str, Dict[str, Optional[str]]]:
 
 
 def _parse_permissions(value: Any) -> list:
-    from extera_utils.metadata_parser import PluginMetadataError, _validate_permissions
+    from kiwi_utils.metadata_parser import PluginMetadataError, _validate_permissions
     try:
         return _validate_permissions(value or [])
     except PluginMetadataError as e:
@@ -239,7 +239,7 @@ def _archive_string_lookup(zf: zipfile.ZipFile, refmap: Dict[str, str]):
 
 
 def read_metadata_json(path: str) -> str:
-    """Same contract as extera_utils.metadata_parser.read_metadata_json."""
+    """Same contract as kiwi_utils.metadata_parser.read_metadata_json."""
     try:
         meta = read_metadata(path)
         return json.dumps({"ok": True, "meta": meta}, ensure_ascii=False)

@@ -11,15 +11,15 @@ BASELINE = "shim_surface.json"
 
 IMPL_OF = {
     "com.exteragram.messenger.plugins.Plugin":
-        "app.exteraless.plugins.Plugin",
+        "app.kiwigram.plugins.Plugin",
     "com.exteragram.messenger.plugins.PluginsController":
-        "app.exteraless.plugins.PluginsController",
+        "app.kiwigram.plugins.PluginsController",
     "com.exteragram.messenger.plugins.PythonPluginsEngine":
-        "app.exteraless.plugins.PythonPluginsEngine",
+        "app.kiwigram.plugins.PythonPluginsEngine",
     "com.exteragram.messenger.plugins.ui.PluginSettingsActivity":
-        "app.exteraless.plugins.ui.PluginSettingsActivity",
+        "app.kiwigram.plugins.ui.PluginSettingsActivity",
     "com.exteragram.messenger.plugins.ui.PluginsActivity":
-        "app.exteraless.plugins.ui.PluginsActivity",
+        "app.kiwigram.plugins.ui.PluginsActivity",
 }
 
 OBJECT_METHODS = {"equals", "hashCode", "toString", "clone", "finalize",

@@ -20,16 +20,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import app.exteraless.OpenExteraConfig;
-import app.exteraless.appearance.AppearanceConfig;
-import app.exteraless.chats.ChatsConfig;
-import app.exteraless.drawer.MainMenuItem;
-import app.exteraless.drawer.MainMenuLayout;
-import app.exteraless.general.GeneralConfig;
-import app.exteraless.icons.BaseIconPacks;
-import app.exteraless.icons.IconPacksConfig;
-import app.exteraless.plugins.Plugin;
-import app.exteraless.utils.UtilsConfig;
+import app.kiwigram.OpenKiwiConfig;
+import app.kiwigram.appearance.AppearanceConfig;
+import app.kiwigram.chats.ChatsConfig;
+import app.kiwigram.drawer.MainMenuItem;
+import app.kiwigram.drawer.MainMenuLayout;
+import app.kiwigram.general.GeneralConfig;
+import app.kiwigram.icons.BaseIconPacks;
+import app.kiwigram.icons.IconPacksConfig;
+import app.kiwigram.plugins.Plugin;
+import app.kiwigram.utils.UtilsConfig;
 
 import tw.nekomimi.nekogram.NekoConfig;
 import xyz.nextalone.nagram.NaConfig;
@@ -41,7 +41,7 @@ import xyz.nextalone.nagram.NaConfig;
  * У exteraGram это поля, а не геттеры, но поле не может читать живое значение
  * настройки, поэтому здесь методы. Chaquopy различает вызов и чтение атрибута,
  * так что плагин, написанный под поле, получил бы объект метода вместо значения;
- * форму выравнивает обёртка {@code extera_utils.class_aliases._FieldShapedClass},
+ * форму выравнивает обёртка {@code kiwi_utils.class_aliases._FieldShapedClass},
  * которой перечислены имена из {@code _FIELD_SHAPED}. Новый метод, который у
  * эталона поле, надо дописывать туда же.
  *
@@ -100,8 +100,8 @@ public final class ExteraConfig {
         return GSON;
     }
 
-    private static app.exteraless.plugins.PluginsController plugins() {
-        return app.exteraless.plugins.PluginsController.getInstance();
+    private static app.kiwigram.plugins.PluginsController plugins() {
+        return app.kiwigram.plugins.PluginsController.getInstance();
     }
 
     private static void ensureLoaded() {
@@ -155,12 +155,12 @@ public final class ExteraConfig {
 
     public static boolean getRelativeLastSeen() {
         ensureLoaded();
-        return OpenExteraConfig.relativeLastSeen.Bool();
+        return OpenKiwiConfig.relativeLastSeen.Bool();
     }
 
     public static void setRelativeLastSeen(boolean value) {
         ensureLoaded();
-        OpenExteraConfig.relativeLastSeen.setConfigBool(value);
+        OpenKiwiConfig.relativeLastSeen.setConfigBool(value);
     }
 
     public static boolean getInAppVibration() {
@@ -263,12 +263,12 @@ public final class ExteraConfig {
 
     public static int getDoNotUseProxy() {
         ensureLoaded();
-        return OpenExteraConfig.proxyDisableConditions.Int();
+        return OpenKiwiConfig.proxyDisableConditions.Int();
     }
 
     public static void setDoNotUseProxy(int value) {
         ensureLoaded();
-        OpenExteraConfig.proxyDisableConditions.setConfigInt(value);
+        OpenKiwiConfig.proxyDisableConditions.setConfigInt(value);
     }
 
     public static String getCustomSavePath() {
@@ -864,12 +864,12 @@ public final class ExteraConfig {
 
     public static boolean getAddCommaAfterMention() {
         ensureLoaded();
-        return OpenExteraConfig.addCommaAfterMention.Bool();
+        return OpenKiwiConfig.addCommaAfterMention.Bool();
     }
 
     public static void setAddCommaAfterMention(boolean value) {
         ensureLoaded();
-        OpenExteraConfig.addCommaAfterMention.setConfigBool(value);
+        OpenKiwiConfig.addCommaAfterMention.setConfigBool(value);
     }
 
     public static boolean getDisableMarkdown() {

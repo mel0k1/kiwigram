@@ -123,8 +123,8 @@ import org.telegram.messenger.LiteMode;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.MediaController;
 import org.telegram.messenger.MediaDataController;
-import app.exteraless.chats.WideChannelPostLayout;
-import app.exteraless.feed.FeedMessageUtils;
+import app.kiwigram.chats.WideChannelPostLayout;
+import app.kiwigram.feed.FeedMessageUtils;
 import org.telegram.messenger.MessageObject;
 import org.telegram.messenger.MessagesController;
 import org.telegram.messenger.MessagesStorage;
@@ -1471,8 +1471,8 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
      * Здесь только зависимые от хвостика геометрии в ячейке.
      */
     private static boolean oeRemoveMessageTail() {
-        app.exteraless.chats.ChatsConfig.ensureLoaded();
-        return app.exteraless.chats.ChatsConfig.removeMessageTail.Bool();
+        app.kiwigram.chats.ChatsConfig.ensureLoaded();
+        return app.kiwigram.chats.ChatsConfig.removeMessageTail.Bool();
     }
 
     /**
@@ -1487,8 +1487,8 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         if (messageObject.forceShowPollResults) {
             return true;
         }
-        app.exteraless.chats.ChatsConfig.ensureLoaded();
-        if (!app.exteraless.chats.ChatsConfig.showResultsBeforeVoting.Bool()
+        app.kiwigram.chats.ChatsConfig.ensureLoaded();
+        if (!app.kiwigram.chats.ChatsConfig.showResultsBeforeVoting.Bool()
                 || media.poll == null
                 || media.results == null
                 || media.results.total_voters <= 0
@@ -1751,7 +1751,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
     private static final int SIDE_BUTTON_SPONSORED_CLOSE = 4;
     private static final int SIDE_BUTTON_SPONSORED_MORE = 5;
     private float sideStartX, sideStartY;
-    private final app.exteraless.chats.StickerTime.Row stickerTimeRow = new app.exteraless.chats.StickerTime.Row();
+    private final app.kiwigram.chats.StickerTime.Row stickerTimeRow = new app.kiwigram.chats.StickerTime.Row();
     private float stickerTimeOffsetX;
     private float summarizeButtonX, summarizeButtonY;
 
@@ -2126,7 +2126,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         // квадратной так она наползала бы на саму картинку — exteraGram уводит её
         // по диагонали (ExteraConfig.getOnlineDotOffset). При круглых
         // аватарках (значение по умолчанию) выражение даёт прежний radius.
-        float offset = app.exteraless.appearance.AppearanceConfig.onlineDotOffset(radius, radius);
+        float offset = app.kiwigram.appearance.AppearanceConfig.onlineDotOffset(radius, radius);
 
         if (onlineStatusPaint == null) {
             onlineStatusPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -2746,7 +2746,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
 
     private static boolean isDeletedReplyQuoteBlock(MessageObject messageObject, MessageObject.TextLayoutBlock block) {
         return block != null && block.quote && block.charactersOffset == 0
-                && app.exteraless.chats.DeletedReplyQuote.quoteLength(messageObject) > 0;
+                && app.kiwigram.chats.DeletedReplyQuote.quoteLength(messageObject) > 0;
     }
 
     private boolean checkCaptionMotionEvent(MotionEvent event) {
@@ -7151,7 +7151,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     drawSideButton = 2;
                 }
             }
-            drawSummarizeButton = !app.exteraless.appearance.AiFeaturesHelper.isMessageSummaryHidden() && TranslateController.isSummarizable(messageObject);
+            drawSummarizeButton = !app.kiwigram.appearance.AiFeaturesHelper.isMessageSummaryHidden() && TranslateController.isSummarizable(messageObject);
             if (messageObject.isWideChannelPost()) {
                 drawSideButton = 0;
                 drawSideButton2 = 0;
@@ -9983,8 +9983,8 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                     availableTimeWidth = photoWidth - dp(14);
                     backgroundWidth = photoWidth + dp(12);
 
-                    // openExtera: форма стикеров (app.exteraless.chats.ChatsConfig)
-                    int oeStickerShape = app.exteraless.chats.ChatsConfig.stickerShape();
+                    // openExtera: форма стикеров (app.kiwigram.chats.ChatsConfig)
+                    int oeStickerShape = app.kiwigram.chats.ChatsConfig.stickerShape();
                     if (oeStickerShape == 1) {
                         photoImage.setRoundRadius(dp(6));
                         canChangeRadius = false;
@@ -22365,8 +22365,8 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         return null;
     }
 
-    private app.exteraless.chats.StickerTime.Row stickerTimeRow() {
-        app.exteraless.chats.StickerTime.Row row = stickerTimeRow;
+    private app.kiwigram.chats.StickerTime.Row stickerTimeRow() {
+        app.kiwigram.chats.StickerTime.Row row = stickerTimeRow;
         row.message = currentMessageObject;
         row.overStickerOffsetX = -dp(STICKER_STATUS_OFFSET);
         row.timeWidth = timeWidth;
@@ -22386,11 +22386,11 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
     }
 
     private float sideButtonTouchLeft() {
-        return app.exteraless.chats.StickerTime.getSideButtonTouchLeft(stickerTimeRow(), dp(24));
+        return app.kiwigram.chats.StickerTime.getSideButtonTouchLeft(stickerTimeRow(), dp(24));
     }
 
     private float sideButtonTouchRight() {
-        return app.exteraless.chats.StickerTime.getSideButtonTouchRight(stickerTimeRow(), dp(40));
+        return app.kiwigram.chats.StickerTime.getSideButtonTouchRight(stickerTimeRow(), dp(40));
     }
 
     public void drawSideButton(Canvas canvas, boolean fromQuickShare) {
@@ -22412,7 +22412,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
                 sideStartX += currentMessagesGroup.transitionParams.offsetRight - animationOffsetX;
             }
         }
-        sideStartX = app.exteraless.chats.StickerTime.getSideButtonX(stickerTimeRow(), sideStartX);
+        sideStartX = app.kiwigram.chats.StickerTime.getSideButtonX(stickerTimeRow(), sideStartX);
         if (drawSideButton == SIDE_BUTTON_SPONSORED_CLOSE) {
             sideStartY = dp(6);
         } else {
@@ -24701,7 +24701,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         if (currentMessageObject != null && currentMessageObject.type == MessageObject.TYPE_JOINED_CHANNEL) {
             return;
         }
-        if (app.exteraless.chats.StickerTime.isHidden(currentMessageObject) && !isDrawSelectionBackground() && !currentMessageObject.isAyuDeleted()) {
+        if (app.kiwigram.chats.StickerTime.isHidden(currentMessageObject) && !isDrawSelectionBackground() && !currentMessageObject.isAyuDeleted()) {
             return;
         }
         for (int i = 0; i < 2; i++) {
@@ -24842,7 +24842,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         if (transitionParams.animateEditedEnter) {
             timeTitleTimeX -= transitionParams.animateEditedWidthDiff * (1f - transitionParams.animateChangeProgress);
         }
-        stickerTimeOffsetX = app.exteraless.chats.StickerTime.getTimeOffsetX(stickerTimeRow(), timeX);
+        stickerTimeOffsetX = app.kiwigram.chats.StickerTime.getTimeOffsetX(stickerTimeRow(), timeX);
 
         int timeYOffset;
         if (shouldDrawTimeOnMedia()) {
@@ -24873,7 +24873,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
             // картинки, иначе она остаётся круглой на скруглённом по-пузырю
             // стикере.
             if ((documentAttachType != DOCUMENT_ATTACH_TYPE_ROUND && documentAttachType != DOCUMENT_ATTACH_TYPE_STICKER && currentMessageObject.type != MessageObject.TYPE_EMOJIS)
-                    || (documentAttachType == DOCUMENT_ATTACH_TYPE_STICKER && app.exteraless.chats.ChatsConfig.stickerShape() == 2)) {
+                    || (documentAttachType == DOCUMENT_ATTACH_TYPE_STICKER && app.kiwigram.chats.ChatsConfig.stickerShape() == 2)) {
                 int[] rad = photoImage.getRoundRadius();
                 r = Math.min(dp(8), Math.max(rad[2], rad[3]));
                 bigRadius = SharedConfig.bubbleRadius >= 10;

@@ -42,7 +42,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import app.exteraless.utils.MediaUtils;
+import app.kiwigram.utils.MediaUtils;
 
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.BuildConfig;

@@ -19,9 +19,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.exteraless.ai.AiConfig;
-import app.exteraless.ai.data.Role;
-import app.exteraless.ai.data.Service;
+import app.kiwigram.ai.AiConfig;
+import app.kiwigram.ai.data.Role;
+import app.kiwigram.ai.data.Service;
 
 public final class AiController {
 
@@ -35,27 +35,27 @@ public final class AiController {
     }
 
     public static boolean canUseAI() {
-        return app.exteraless.ai.AiController.canUseAI();
+        return app.kiwigram.ai.AiController.canUseAI();
     }
 
     public List<Role> getRoles() {
-        return app.exteraless.ai.AiController.getAllRoles();
+        return app.kiwigram.ai.AiController.getAllRoles();
     }
 
     public List<Role> getSuggestedRoles() {
-        return app.exteraless.ai.AiController.getSuggestedRoles();
+        return app.kiwigram.ai.AiController.getSuggestedRoles();
     }
 
     public boolean addRole(Role role) {
-        return app.exteraless.ai.AiController.addRole(role);
+        return app.kiwigram.ai.AiController.addRole(role);
     }
 
     public void removeRole(Role role) {
-        app.exteraless.ai.AiController.removeRole(role);
+        app.kiwigram.ai.AiController.removeRole(role);
     }
 
     public Role getSelectedRole() {
-        return app.exteraless.ai.AiController.getSelectedRole();
+        return app.kiwigram.ai.AiController.getSelectedRole();
     }
 
     public void setSelectedRole(Role role) {
@@ -67,15 +67,15 @@ public final class AiController {
     }
 
     public void addService(Service service) {
-        app.exteraless.ai.AiController.saveService(service);
+        app.kiwigram.ai.AiController.saveService(service);
     }
 
     public void removeService(Service service) {
-        app.exteraless.ai.AiController.removeService(service);
+        app.kiwigram.ai.AiController.removeService(service);
     }
 
     public Service getSelected() {
-        return app.exteraless.ai.AiController.getSelected();
+        return app.kiwigram.ai.AiController.getSelected();
     }
 
     public boolean isServicesEmpty() {
@@ -110,16 +110,16 @@ public final class AiController {
         if (from == null || to == null) {
             return false;
         }
-        app.exteraless.ai.AiController.removeRole(from);
-        return app.exteraless.ai.AiController.addRole(to);
+        app.kiwigram.ai.AiController.removeRole(from);
+        return app.kiwigram.ai.AiController.addRole(to);
     }
 
     public void updateService(Service from, Service to) {
         if (from != null) {
-            app.exteraless.ai.AiController.removeService(from);
+            app.kiwigram.ai.AiController.removeService(from);
         }
         if (to != null) {
-            app.exteraless.ai.AiController.saveService(to);
+            app.kiwigram.ai.AiController.saveService(to);
         }
     }
 

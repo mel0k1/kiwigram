@@ -8,7 +8,7 @@
 
 package org.telegram.messenger;
 
-import app.exteraless.OpenExteraConfig;
+import app.kiwigram.OpenKiwiConfig;
 
 import static org.telegram.messenger.AndroidUtilities.dp;
 import static org.telegram.messenger.AndroidUtilities.formatWholeNumber;
@@ -1471,9 +1471,9 @@ public class LocaleController {
     /** Имя форка. */
     public static String getAppName() {
         try {
-            return ApplicationLoader.applicationContext.getString(R.string.OpenExtera);
+            return ApplicationLoader.applicationContext.getString(R.string.OpenKiwi);
         } catch (Exception ignore) {
-            return "exteraless";
+            return "kiwigram";
         }
     }
 
@@ -2787,7 +2787,7 @@ public class LocaleController {
         final String seenDateKey = localActivity ? "OELastActivityDateFormatted" : "LastSeenDateFormatted";
         final int seenDateRes = localActivity ? R.string.OELastActivityDateFormatted : R.string.LastSeenDateFormatted;
         try {
-            if (relative && OpenExteraConfig.relativeLastSeen()) {
+            if (relative && OpenKiwiConfig.relativeLastSeen()) {
                 long diff = System.currentTimeMillis() / 1000 - date;
                 if (diff < 0) {
                     diff = 0;

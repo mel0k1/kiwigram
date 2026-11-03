@@ -62,7 +62,7 @@ public class SectionsScrollView extends ScrollView {
     }
 
     private void updateSectionRadius() {
-        float radius = dp(app.exteraless.appearance.AppearanceConfig.sectionRadius());
+        float radius = dp(app.kiwigram.appearance.AppearanceConfig.sectionRadius());
         if (sectionRadius == radius) {
             return;
         }

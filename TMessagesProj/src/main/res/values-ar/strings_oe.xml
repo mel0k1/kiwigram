@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="OpenExteraInfo">اجعل التطبيق خاصًا بك حقًا</string>
-    <string name="OpenExteraChats">المحادثات</string>
+    <string name="OpenKiwiInfo">اجعل التطبيق خاصًا بك حقًا</string>
+    <string name="OpenKiwiChats">المحادثات</string>
     <string name="AddCommaAfterMention">إضافة فاصلة بعد الإشارة</string>
-    <string name="OpenExteraCategories">الفئات</string>
-    <string name="OpenExteraGeneral">عام</string>
-    <string name="OpenExteraAppearance">المظهر</string>
-    <string name="OpenExteraOther">أخرى</string>
-    <string name="OpenExteraLinks">الروابط</string>
-    <string name="OpenExteraSource">الشيفرة المصدرية</string>
+    <string name="OpenKiwiCategories">الفئات</string>
+    <string name="OpenKiwiGeneral">عام</string>
+    <string name="OpenKiwiAppearance">المظهر</string>
+    <string name="OpenKiwiOther">أخرى</string>
+    <string name="OpenKiwiLinks">الروابط</string>
+    <string name="OpenKiwiSource">الشيفرة المصدرية</string>
     <string name="QrTitleLink">رابط</string>
     <string name="QrTitleWifi">شبكة Wi-Fi</string>
     <string name="QrTitleLogin">رمز تسجيل الدخول إلى Telegram</string>
@@ -19,10 +19,10 @@
     <string name="QrWifiUnknownNetwork">اسم الشبكة غير موجود في الرمز</string>
     <string name="QrLoginHint">هذا الرمز يسجّل الدخول إلى حساب. استخدم الإعدادات ← الأجهزة ← ربط جهاز سطح المكتب، فهذه الشاشة تتحقق من الرمز وتحمي حسابك.</string>
     <string name="QrLoginConfirm">هذا الرمز يسجّل دخول جهاز جديد إلى حسابك. اسمح بذلك فقط إذا كنت تسجّل الدخول بنفسك على جهازك.</string>
-    <string name="OpenExteraPreferences">تفضيلات exteraless</string>
-    <string name="OpenExteraDesignSection">التصميم</string>
-    <string name="OpenExteraDesigner">الأيقونات والتصميم</string>
-    <string name="OpenExteraDesignStudio">استوديو التصميم</string>
+    <string name="OpenKiwiPreferences">تفضيلات kiwigram</string>
+    <string name="OpenKiwiDesignSection">التصميم</string>
+    <string name="OpenKiwiDesigner">الأيقونات والتصميم</string>
+    <string name="OpenKiwiDesignStudio">استوديو التصميم</string>
     <string name="OEDownloadEmojiPacks">تنزيل حزم الإيموجي</string>
     <string name="OESubtitles">الترجمة المصاحبة</string>
     <string name="OEChooseSubtitles">اختيار الترجمة المصاحبة</string>

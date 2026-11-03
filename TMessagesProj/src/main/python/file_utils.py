@@ -1,4 +1,4 @@
-"""File system helpers for plugins — part of the exteraless plugin SDK.
+"""File system helpers for plugins — part of the kiwigram plugin SDK.
 
 Directory resolution uses the Android Context (filesDir/cacheDir) and
 FileLoader media directories. Media directories fall back to subdirectories
@@ -23,7 +23,7 @@ def _internal(name):
     module = _internal_modules.get(name)
     if module is None:
         import importlib
-        module = importlib.import_module("extera_utils." + name)
+        module = importlib.import_module("kiwi_utils." + name)
         _internal_modules[name] = module
     return module
 
@@ -39,7 +39,7 @@ def _context():
 
 def get_plugins_dir() -> str:
     """Absolute path of the plugin directory (filesDir/plugins)."""
-    from app.exteraless.plugins import PythonBridge
+    from app.kiwigram.plugins import PythonBridge
     return str(PythonBridge.getPluginsDir())
 
 
@@ -372,7 +372,7 @@ def read_file_bytes(path: str) -> Optional[bytes]:
 # FilesController (per-extension file-open interception, PLUGINS-API.md §8)
 
 def _plugin_services():
-    from app.exteraless.plugins import PluginServices
+    from app.kiwigram.plugins import PluginServices
     return PluginServices
 
 
@@ -575,7 +575,7 @@ class FilesController(metaclass=_FilesControllerMeta):
             return False
 
 
-# Called from BasePlugin._exteraless_cleanup_resources() on plugin unload.
+# Called from BasePlugin._kiwigram_cleanup_resources() on plugin unload.
 def _unregister_all_for_plugin(plugin_id: str):
     if not plugin_id:
         return

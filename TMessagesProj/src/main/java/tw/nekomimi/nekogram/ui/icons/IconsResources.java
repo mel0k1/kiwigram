@@ -7,7 +7,7 @@ import android.util.LruCache;
 
 import androidx.annotation.Nullable;
 
-import app.exteraless.icons.IconPackManager;
+import app.kiwigram.icons.IconPackManager;
 
 import xyz.nextalone.nagram.NaConfig;
 

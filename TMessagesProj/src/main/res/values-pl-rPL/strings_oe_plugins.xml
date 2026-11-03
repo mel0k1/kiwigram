@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="OpenExteraPlugins">Wtyczki</string>
+    <string name="OpenKiwiPlugins">Wtyczki</string>
     <string name="PluginsSafeMode">Tryb awaryjny</string>
     <string name="PluginsSafeModeSummary">Przy włączonym trybie awaryjnym żadne wtyczki nie są ładowane. Użyj go, jeśli wtyczka psuje aplikację.</string>
     <string name="PluginsUnsafeMode">Tryb bez zabezpieczeń</string>

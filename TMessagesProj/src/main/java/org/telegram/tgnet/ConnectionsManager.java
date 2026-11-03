@@ -14,7 +14,7 @@ import android.util.Base64;
 
 import androidx.annotation.Keep;
 
-import app.exteraless.feed.FeedRequestNormalizer;
+import app.kiwigram.feed.FeedRequestNormalizer;
 
 import androidx.annotation.OptIn;
 import androidx.media3.common.util.UnstableApi;
@@ -438,11 +438,11 @@ public class ConnectionsManager extends BaseController {
         final var onComplete = interceptResult.effectiveOnComplete();
         // --- Ghost Mode ---
 
-        // --- exteraless plugins: pre_request_hook (CANCEL = запрос не уходит) ---
+        // --- kiwigram plugins: pre_request_hook (CANCEL = запрос не уходит) ---
         TLObject pluginRequest = object;
-        if (app.exteraless.plugins.PluginsController.getInstance().hasAnyRequestHooks()) {
-            app.exteraless.plugins.HookResult preHook = app.exteraless.plugins.PluginsController.getInstance()
-                    .executePreRequestHook(currentAccount, app.exteraless.plugins.PluginsController.hookName(object), object);
+        if (app.kiwigram.plugins.PluginsController.getInstance().hasAnyRequestHooks()) {
+            app.kiwigram.plugins.HookResult preHook = app.kiwigram.plugins.PluginsController.getInstance()
+                    .executePreRequestHook(currentAccount, app.kiwigram.plugins.PluginsController.hookName(object), object);
             if (preHook.isCancel()) {
                 FileLog.d("Plugins: request " + object.getClass().getSimpleName() + " cancelled by plugin");
                 return;
@@ -452,7 +452,7 @@ public class ConnectionsManager extends BaseController {
                 pluginRequest = replacement;
             }
         }
-        // --- exteraless plugins ---
+        // --- kiwigram plugins ---
 
         try {
             final TLObject normalizedObject = FeedRequestNormalizer.normalize(currentAccount, pluginRequest);
@@ -521,10 +521,10 @@ public class ConnectionsManager extends BaseController {
                     final TLRPC.TL_error finalError = error;
                     Utilities.stageQueue.postRunnable(() -> {
                         TLObject pluginResponse = finalResponse;
-                        // exteraless plugins: post_request_hook
-                        if (app.exteraless.plugins.PluginsController.getInstance().hasAnyRequestHooks()) {
-                            app.exteraless.plugins.HookResult postHook = app.exteraless.plugins.PluginsController.getInstance()
-                                    .executePostRequestHook(currentAccount, app.exteraless.plugins.PluginsController.hookName(normalizedObject), finalResponse, finalError);
+                        // kiwigram plugins: post_request_hook
+                        if (app.kiwigram.plugins.PluginsController.getInstance().hasAnyRequestHooks()) {
+                            app.kiwigram.plugins.HookResult postHook = app.kiwigram.plugins.PluginsController.getInstance()
+                                    .executePostRequestHook(currentAccount, app.kiwigram.plugins.PluginsController.hookName(normalizedObject), finalResponse, finalError);
                             if (postHook.isCancel()) {
                                 if (onComplete == null && onCompleteTimestamp == null
                                         && finalResponse instanceof TLRPC.Updates) {

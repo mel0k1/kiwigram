@@ -193,12 +193,12 @@
 # --- Движок плагинов -------------------------------------------------------
 # Всё ниже достижимо только из Python через рефлексию Chaquopy, для статического
 # анализатора это мёртвый код. minifyEnabled в релизе вырезал бы его целиком.
--keep class app.exteraless.plugins.** { *; }
--keep class app.exteraless.settings.utils.** { *; }
--keep class app.exteraless.utils.text.** { *; }
--keep class app.exteraless.pillstack.** { *; }
--keep class app.exteraless.appearance.AltSeekbar { *; }
--keep interface app.exteraless.appearance.AltSeekbar$OnDrag { *; }
+-keep class app.kiwigram.plugins.** { *; }
+-keep class app.kiwigram.settings.utils.** { *; }
+-keep class app.kiwigram.utils.text.** { *; }
+-keep class app.kiwigram.pillstack.** { *; }
+-keep class app.kiwigram.appearance.AltSeekbar { *; }
+-keep interface app.kiwigram.appearance.AltSeekbar$OnDrag { *; }
 -keep class com.exteragram.messenger.** { *; }
 -keep class de.robv.android.xposed.** { *; }
 -keep class kotlin.** { *; }

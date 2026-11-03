@@ -1,16 +1,16 @@
-"""Elyx structured-plugin runtime for the exteraless plugin engine.
+"""Elyx structured-plugin runtime for the kiwigram plugin engine.
 
 Loads .elyx/.eaf archives (ZIP with a root refmap) as ordinary BasePlugin
 instances inside an isolated ElyxPlugins.<plugin_id> import namespace, with
 bundled assets, localization and plugin-local wheels.
 
-Public contract consumed by extera_utils.plugin_loader:
+Public contract consumed by kiwi_utils.plugin_loader:
 
     load_plugin_record(record, path)  -> None  (raises ElyxError on bad archives)
     unload_plugin_record(record)      -> None
     is_available()                    -> True
 
-read_metadata()/read_metadata_json() mirror extera_utils.metadata_parser so the
+read_metadata()/read_metadata_json() mirror kiwi_utils.metadata_parser so the
 scanner can read archive metadata without executing plugin code.
 
 Importing this package also installs the plugin-facing `elyx` facade module

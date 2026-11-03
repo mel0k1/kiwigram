@@ -11,10 +11,10 @@ def test_bot_account_policy(tmp_path, name):
     if not shutil.which('javac'):
         pytest.skip('JDK required')
     subprocess.run(['javac', '-d', str(tmp_path),
-        str(ROOT / f'TMessagesProj/src/main/java/app/exteraless/privacy/{name}.java'),
+        str(ROOT / f'TMessagesProj/src/main/java/app/kiwigram/privacy/{name}.java'),
         str(ROOT / f'tests/bot_privacy/{name}Test.java')], check=True)
     subprocess.run(['java', '-cp', str(tmp_path),
-        f'app.exteraless.privacy.{name}Test'], check=True)
+        f'app.kiwigram.privacy.{name}Test'], check=True)
 
 
 @pytest.mark.parametrize('dialog,message,expected', [

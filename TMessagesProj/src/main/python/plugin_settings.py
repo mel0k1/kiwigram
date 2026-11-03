@@ -14,11 +14,11 @@ import json as _json
 import threading as _threading
 
 try:
-    from app.exteraless.plugins import PythonBridge as _bridge
+    from app.kiwigram.plugins import PythonBridge as _bridge
 except Exception:
     try:
-        from extera_utils.plugin_loader import engine_java_class as _engine_class
-        _bridge = _engine_class("app.exteraless.plugins.PythonBridge")
+        from kiwi_utils.plugin_loader import engine_java_class as _engine_class
+        _bridge = _engine_class("app.kiwigram.plugins.PythonBridge")
     except Exception:
         _bridge = None
 

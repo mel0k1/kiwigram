@@ -134,9 +134,9 @@ public final class SettingsBackupHelper {
             spToJSON("aiConfig", configJson, key -> !"history".equals(key));
         }
         if (!isCloud) {
-            JSONObject faveStickers = app.exteraless.utils.FaveStickersBackup.export();
+            JSONObject faveStickers = app.kiwigram.utils.FaveStickersBackup.export();
             if (faveStickers != null) {
-                configJson.put(app.exteraless.utils.FaveStickersBackup.KEY, faveStickers);
+                configJson.put(app.kiwigram.utils.FaveStickersBackup.KEY, faveStickers);
             }
         }
 
@@ -204,14 +204,14 @@ public final class SettingsBackupHelper {
         } catch (Throwable ignore) {
         }
         try {
-            configTypes.putAll(app.exteraless.OpenExteraConfig.getConfigTypes());
-            configTypes.putAll(app.exteraless.chats.ChatsConfig.getConfigTypes());
-            configTypes.putAll(app.exteraless.icons.IconPacksConfig.getConfigTypes());
-            configTypes.putAll(app.exteraless.glyph.GlyphConfig.getConfigTypes());
-            configTypes.putAll(app.exteraless.pillstack.PillStackConfig.getConfigTypes());
-            configTypes.putAll(app.exteraless.utils.UtilsConfig.getConfigTypes());
-            configTypes.putAll(app.exteraless.appearance.AppearanceConfig.getConfigTypes());
-            configTypes.putAll(app.exteraless.general.GeneralConfig.getConfigTypes());
+            configTypes.putAll(app.kiwigram.OpenKiwiConfig.getConfigTypes());
+            configTypes.putAll(app.kiwigram.chats.ChatsConfig.getConfigTypes());
+            configTypes.putAll(app.kiwigram.icons.IconPacksConfig.getConfigTypes());
+            configTypes.putAll(app.kiwigram.glyph.GlyphConfig.getConfigTypes());
+            configTypes.putAll(app.kiwigram.pillstack.PillStackConfig.getConfigTypes());
+            configTypes.putAll(app.kiwigram.utils.UtilsConfig.getConfigTypes());
+            configTypes.putAll(app.kiwigram.appearance.AppearanceConfig.getConfigTypes());
+            configTypes.putAll(app.kiwigram.general.GeneralConfig.getConfigTypes());
         } catch (Throwable ignore) {
         }
         String[] preservePrefixes = {
@@ -228,7 +228,7 @@ public final class SettingsBackupHelper {
 
         for (Map.Entry<String, JsonElement> element : configJson.entrySet()) {
             String spName = element.getKey();
-            if (app.exteraless.utils.FaveStickersBackup.KEY.equals(spName) || !element.getValue().isJsonObject()) {
+            if (app.kiwigram.utils.FaveStickersBackup.KEY.equals(spName) || !element.getValue().isJsonObject()) {
                 continue;
             }
             SharedPreferences preferences = ApplicationLoader.applicationContext.getSharedPreferences(spName, Activity.MODE_PRIVATE);
@@ -289,7 +289,7 @@ public final class SettingsBackupHelper {
             }
             editor.commit();
         }
-        app.exteraless.utils.FaveStickersBackup.restore(configJson.get(app.exteraless.utils.FaveStickersBackup.KEY));
+        app.kiwigram.utils.FaveStickersBackup.restore(configJson.get(app.kiwigram.utils.FaveStickersBackup.KEY));
         PushListenerController.reconcilePushRegistration();
     }
 

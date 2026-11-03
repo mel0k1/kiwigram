@@ -50,7 +50,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import app.exteraless.OpenExteraConfig;
+import app.kiwigram.OpenKiwiConfig;
 
 import tw.nekomimi.nekogram.NekoConfig;
 import tw.nekomimi.nekogram.helpers.remote.EmojiHelper;
@@ -147,11 +147,11 @@ public class NekoEmojiSettingsActivity extends BaseNekoSettingsActivity implemen
             }
             listAdapter.notifyEmojiSetsChanged();
         } else if (position == downloadEmojiPacksRow) {
-            OpenExteraConfig.downloadEmojiPacks.toggleConfigBool();
+            OpenKiwiConfig.downloadEmojiPacks.toggleConfigBool();
             if (view instanceof TextCheckCell) {
-                ((TextCheckCell) view).setChecked(OpenExteraConfig.downloadEmojiPacks());
+                ((TextCheckCell) view).setChecked(OpenKiwiConfig.downloadEmojiPacks());
             }
-            if (OpenExteraConfig.downloadEmojiPacks()) {
+            if (OpenKiwiConfig.downloadEmojiPacks()) {
                 EmojiHelper.getInstance().loadEmojisInfo(this);
             }
             updateListAnimated();
@@ -224,7 +224,7 @@ public class NekoEmojiSettingsActivity extends BaseNekoSettingsActivity implemen
 
         emojiPackRow = addRow();
         downloadEmojiPacksRow = addRow("downloadEmojiPacks");
-        if (!OpenExteraConfig.downloadEmojiPacks()) {
+        if (!OpenKiwiConfig.downloadEmojiPacks()) {
             emojiPacksStartRow = -1;
             emojiPacksEndRow = -1;
             placeHolderRow = -1;
@@ -447,9 +447,9 @@ public class NekoEmojiSettingsActivity extends BaseNekoSettingsActivity implemen
                         }
                     } else if (position == downloadEmojiPacksRow) {
                         if (partial) {
-                            textCheckCell.setChecked(OpenExteraConfig.downloadEmojiPacks());
+                            textCheckCell.setChecked(OpenKiwiConfig.downloadEmojiPacks());
                         } else {
-                            textCheckCell.setTextAndCheck(getString(R.string.OEDownloadEmojiPacks), OpenExteraConfig.downloadEmojiPacks(), false);
+                            textCheckCell.setTextAndCheck(getString(R.string.OEDownloadEmojiPacks), OpenKiwiConfig.downloadEmojiPacks(), false);
                         }
                     }
                     break;

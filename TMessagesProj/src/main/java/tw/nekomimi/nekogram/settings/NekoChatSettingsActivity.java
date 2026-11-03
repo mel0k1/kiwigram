@@ -267,7 +267,7 @@ public class NekoChatSettingsActivity extends BaseNekoXSettingsActivity implemen
 
     private final AbstractConfigCell textStyleRow = cellGroup.appendCell(new ConfigCellTextCheckIcon(null, "TextStyle", null, R.drawable.msg_photo_text_framed3, false, () -> {
         if (getParentActivity() == null) return;
-        showDialog(app.exteraless.chats.TextStyleDialog.create(getParentActivity()));
+        showDialog(app.kiwigram.chats.TextStyleDialog.create(getParentActivity()));
     }));
     private final AbstractConfigCell dividerMenuAndButtons = cellGroup.appendCell(new ConfigCellDivider());
 

@@ -222,7 +222,7 @@ public final class AppUtils {
             FileLog.e(e);
         }
         if (isAppModified()) {
-            builder.append("\nbased on @exteraless");
+            builder.append("\nbased on @kiwigram");
         }
         return builder.toString();
     }

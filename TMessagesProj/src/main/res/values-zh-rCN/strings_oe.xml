@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="OpenExteraInfo">打造专属于你的客户端</string>
-    <string name="OpenExteraChats">聊天</string>
+    <string name="OpenKiwiInfo">打造专属于你的客户端</string>
+    <string name="OpenKiwiChats">聊天</string>
     <string name="AddCommaAfterMention">提及后添加逗号</string>
-    <string name="OpenExteraCategories">分类</string>
-    <string name="OpenExteraGeneral">通用</string>
-    <string name="OpenExteraAppearance">外观</string>
-    <string name="OpenExteraOther">其他</string>
-    <string name="OpenExteraLinks">链接</string>
-    <string name="OpenExteraSource">源代码</string>
+    <string name="OpenKiwiCategories">分类</string>
+    <string name="OpenKiwiGeneral">通用</string>
+    <string name="OpenKiwiAppearance">外观</string>
+    <string name="OpenKiwiOther">其他</string>
+    <string name="OpenKiwiLinks">链接</string>
+    <string name="OpenKiwiSource">源代码</string>
     <string name="QrTitleLink">链接</string>
     <string name="QrTitleWifi">Wi-Fi 网络</string>
     <string name="QrTitleLogin">Telegram 登录码</string>
@@ -19,10 +19,10 @@
     <string name="QrWifiUnknownNetwork">二维码中没有网络名称</string>
     <string name="QrLoginHint">此二维码用于登录账号。请改用「设置 → 设备 → 关联桌面设备」，该界面会校验二维码并保护你的账号。</string>
     <string name="QrLoginConfirm">此二维码会在新设备上登录你的账号。仅当你本人在自己的设备上登录时才允许。</string>
-    <string name="OpenExteraPreferences">exteraless 设置</string>
-    <string name="OpenExteraDesignSection">设计</string>
-    <string name="OpenExteraDesigner">图标与设计</string>
-    <string name="OpenExteraDesignStudio">设计工作室</string>
+    <string name="OpenKiwiPreferences">kiwigram 设置</string>
+    <string name="OpenKiwiDesignSection">设计</string>
+    <string name="OpenKiwiDesigner">图标与设计</string>
+    <string name="OpenKiwiDesignStudio">设计工作室</string>
     <string name="OEDownloadEmojiPacks">下载表情包</string>
     <string name="OESubtitles">字幕</string>
     <string name="OEChooseSubtitles">选择字幕</string>

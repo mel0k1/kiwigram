@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="OpenExteraInfo">Dopasuj klienta do siebie</string>
-    <string name="OpenExteraChats">Czaty</string>
+    <string name="OpenKiwiInfo">Dopasuj klienta do siebie</string>
+    <string name="OpenKiwiChats">Czaty</string>
     <string name="AddCommaAfterMention">Dodaj przecinek po wzmiance</string>
-    <string name="OpenExteraCategories">Kategorie</string>
-    <string name="OpenExteraGeneral">Ogólne</string>
-    <string name="OpenExteraAppearance">Wygląd</string>
-    <string name="OpenExteraOther">Inne</string>
-    <string name="OpenExteraLinks">Linki</string>
-    <string name="OpenExteraSource">Kod źródłowy</string>
+    <string name="OpenKiwiCategories">Kategorie</string>
+    <string name="OpenKiwiGeneral">Ogólne</string>
+    <string name="OpenKiwiAppearance">Wygląd</string>
+    <string name="OpenKiwiOther">Inne</string>
+    <string name="OpenKiwiLinks">Linki</string>
+    <string name="OpenKiwiSource">Kod źródłowy</string>
     <string name="QrTitleLink">Link</string>
     <string name="QrTitleWifi">Sieć Wi-Fi</string>
     <string name="QrTitleLogin">Kod logowania Telegrama</string>
@@ -19,10 +19,10 @@
     <string name="QrWifiUnknownNetwork">W kodzie brakuje nazwy sieci</string>
     <string name="QrLoginHint">Ten kod loguje do konta. Skorzystaj z Ustawienia → Urządzenia → Podłącz komputer — tamten ekran weryfikuje kod i chroni Twoje konto.</string>
     <string name="QrLoginConfirm">Ten kod loguje nowe urządzenie do Twojego konta. Zezwól tylko wtedy, gdy sam logujesz się na własnym urządzeniu.</string>
-    <string name="OpenExteraPreferences">Ustawienia exteraless</string>
-    <string name="OpenExteraDesignSection">Projekt graficzny</string>
-    <string name="OpenExteraDesigner">Ikony i projekt graficzny</string>
-    <string name="OpenExteraDesignStudio">Studio projektowe</string>
+    <string name="OpenKiwiPreferences">Ustawienia kiwigram</string>
+    <string name="OpenKiwiDesignSection">Projekt graficzny</string>
+    <string name="OpenKiwiDesigner">Ikony i projekt graficzny</string>
+    <string name="OpenKiwiDesignStudio">Studio projektowe</string>
     <string name="OEDownloadEmojiPacks">Pobierz paczki emoji</string>
     <string name="OESubtitles">Napisy</string>
     <string name="OEChooseSubtitles">Wybierz napisy</string>

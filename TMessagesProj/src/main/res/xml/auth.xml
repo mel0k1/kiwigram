@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accountType="com.exteraless.app"
-    android:icon="@mipmap/ic_launcher_exteraless_round"
-    android:smallIcon="@mipmap/ic_launcher_exteraless_round"
+    android:accountType="app.kiwigram"
+    android:icon="@mipmap/ic_launcher_kiwigram_round"
+    android:smallIcon="@mipmap/ic_launcher_kiwigram_round"
     android:label="@string/AppName"
     android:accountPreferences="@xml/auth_menu"/>

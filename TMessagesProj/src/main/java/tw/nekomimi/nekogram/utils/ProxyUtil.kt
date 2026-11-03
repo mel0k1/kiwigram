@@ -22,8 +22,8 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.graphics.createBitmap
-import app.exteraless.OpenExteraConfig
-import app.exteraless.proxy.ProxyDisableCondition
+import app.kiwigram.OpenKiwiConfig
+import app.kiwigram.proxy.ProxyDisableCondition
 import androidx.core.view.setPadding
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.BinaryBitmap
@@ -66,16 +66,16 @@ object ProxyUtil {
      * Подходит ли текущая сеть под условия автоотключения прокси.
      *
      * У NagramX условие было одно — VPN; exteraGram 12.9.2 держит маску из VPN,
-     * мобильного интернета и Wi-Fi, см. [OpenExteraConfig.proxyDisableConditions].
+     * мобильного интернета и Wi-Fi, см. [OpenKiwiConfig.proxyDisableConditions].
      */
     private fun shouldDisableProxyOn(capabilities: NetworkCapabilities): Boolean {
-        if (OpenExteraConfig.isProxyDisabledOn(ProxyDisableCondition.VPN) &&
+        if (OpenKiwiConfig.isProxyDisabledOn(ProxyDisableCondition.VPN) &&
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)
         ) return true
-        if (OpenExteraConfig.isProxyDisabledOn(ProxyDisableCondition.MOBILE_DATA) &&
+        if (OpenKiwiConfig.isProxyDisabledOn(ProxyDisableCondition.MOBILE_DATA) &&
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
         ) return true
-        return OpenExteraConfig.isProxyDisabledOn(ProxyDisableCondition.WIFI) &&
+        return OpenKiwiConfig.isProxyDisabledOn(ProxyDisableCondition.WIFI) &&
             capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
     }
 

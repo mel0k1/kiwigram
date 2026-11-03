@@ -274,8 +274,8 @@ import tw.nekomimi.nekogram.helpers.SettingsHelper;
 import tw.nekomimi.nekogram.helpers.remote.EmojiHelper;
 import tw.nekomimi.nekogram.helpers.remote.PagePreviewRulesHelper;
 import tw.nekomimi.nekogram.helpers.remote.UpdateHelper;
-import app.exteraless.chats.UserLookup;
-import app.exteraless.settings.OpenExteraSettingsActivity;
+import app.kiwigram.chats.UserLookup;
+import app.kiwigram.settings.OpenKiwiSettingsActivity;
 import tw.nekomimi.nekogram.utils.AlertUtil;
 import tw.nekomimi.nekogram.utils.AndroidUtil;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
@@ -481,7 +481,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
         flagSecureReason.attach();
 
         super.onCreate(savedInstanceState);
-        app.exteraless.general.GeneralHelper.applyContentCapture(this);
+        app.kiwigram.general.GeneralHelper.applyContentCapture(this);
         if (Build.VERSION.SDK_INT >= 24) {
             AndroidUtilities.isInMultiwindow = isInMultiWindowMode();
         }
@@ -1324,9 +1324,9 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
         if (drawerLayoutContainer == null) {
             return;
         }
-        if (app.exteraless.appearance.AppearanceConfig.navigationDrawer()) {
+        if (app.kiwigram.appearance.AppearanceConfig.navigationDrawer()) {
             if (drawerLayoutContainer.getDrawerContainer() == null) {
-                drawerLayoutContainer.setDrawerContainer(new app.exteraless.drawer.DrawerContainer(this));
+                drawerLayoutContainer.setDrawerContainer(new app.kiwigram.drawer.DrawerContainer(this));
             }
         } else if (drawerLayoutContainer.getDrawerContainer() != null) {
             drawerLayoutContainer.setDrawerContainer(null);
@@ -1600,21 +1600,21 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
         return handleIntent(intent, isNew, restore, fromPassword, null, true, false);
     }
 
-    // exteraless plugins: обёртка маршрутизации интентов с before/after-хендлерами плагинов.
+    // kiwigram plugins: обёртка маршрутизации интентов с before/after-хендлерами плагинов.
     // before, вернувший true, глотает интент (оригинальная обработка не выполняется);
     // after зовётся всегда (finally) после оригинальной обработки.
     private boolean handleIntent(Intent intent, boolean isNew, boolean restore, boolean fromPassword, Browser.Progress progress, boolean rebuildFragments, boolean openedTelegram) {
-        if (intent != null && app.exteraless.plugins.PluginsController.getInstance().isEngineEnabled()
-                && app.exteraless.plugins.intents.IntentsDispatcher.hasHandlers()) {
-            java.util.Map<String, Object> pluginContext = app.exteraless.plugins.intents.IntentsDispatcher.buildIntentContext(
+        if (intent != null && app.kiwigram.plugins.PluginsController.getInstance().isEngineEnabled()
+                && app.kiwigram.plugins.intents.IntentsDispatcher.hasHandlers()) {
+            java.util.Map<String, Object> pluginContext = app.kiwigram.plugins.intents.IntentsDispatcher.buildIntentContext(
                     intent, intent.getIntExtra("currentAccount", UserConfig.selectedAccount), true);
-            if (app.exteraless.plugins.intents.IntentsDispatcher.dispatchBefore(pluginContext)) {
+            if (app.kiwigram.plugins.intents.IntentsDispatcher.dispatchBefore(pluginContext)) {
                 return true;
             }
             try {
                 return handleIntentInternal(intent, isNew, restore, fromPassword, progress, rebuildFragments, openedTelegram);
             } finally {
-                app.exteraless.plugins.intents.IntentsDispatcher.dispatchAfter(pluginContext);
+                app.kiwigram.plugins.intents.IntentsDispatcher.dispatchAfter(pluginContext);
             }
         }
         return handleIntentInternal(intent, isNew, restore, fromPassword, progress, rebuildFragments, openedTelegram);
@@ -1801,7 +1801,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                             } else if ((text.startsWith("http://") || text.startsWith("https://")) && !TextUtils.isEmpty(subject)) {
                                 text = subject + "\n" + text;
                             }
-                            sendingText = app.exteraless.links.LinkCleaner.cleanString(text);
+                            sendingText = app.kiwigram.links.LinkCleaner.cleanString(text);
                         } else if (!TextUtils.isEmpty(subject)) {
                             sendingText = subject;
                         }
@@ -2025,9 +2025,9 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                 } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
                     Uri data = intent.getData();
 
-                    // exteraless plugins: файл плагина, открытый снаружи (тап в чате,
+                    // kiwigram plugins: файл плагина, открытый снаружи (тап в чате,
                     // файловый менеджер). Проверка по расширению, до разбора ссылок.
-                    if (app.exteraless.plugins.PluginInstallHelper.handleViewIntent(this, data)) {
+                    if (app.kiwigram.plugins.PluginInstallHelper.handleViewIntent(this, data)) {
                         return true;
                     }
 
@@ -2122,8 +2122,8 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                                         String path = data.getPath();
                                         if (path != null && path.length() > 1) {
                                             path = path.substring(1);
-                                            if (app.exteraless.plugins.PluginsController.isSettingsLink(path, data)) {
-                                                app.exteraless.plugins.PluginsController.openSettingsLink(data);
+                                            if (app.kiwigram.plugins.PluginsController.isSettingsLink(path, data)) {
+                                                app.kiwigram.plugins.PluginsController.openSettingsLink(data);
                                             } else if (path.startsWith("$")) {
                                                 inputInvoiceSlug = path.substring(1);
                                             } else if (path.startsWith("invoice/")) {
@@ -3298,7 +3298,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
             } else if (showPlayer) {
                 if (!actionBarLayout.getFragmentStack().isEmpty()) {
                     BaseFragment fragment = actionBarLayout.getFragmentStack().get(0);
-                    fragment.showDialog(app.exteraless.player.Md3Player.create(this, null));
+                    fragment.showDialog(app.kiwigram.player.Md3Player.create(this, null));
                 }
                 pushOpened = false;
             } else if (showLocations) {
@@ -3398,7 +3398,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
 
                     fragment = null;
                 } else if (open_settings == 100) {
-                    fragment = new OpenExteraSettingsActivity();
+                    fragment = new OpenKiwiSettingsActivity();
                 } else if (ApplicationLoader.applicationLoaderInstance != null) {
                     fragment = ApplicationLoader.applicationLoaderInstance.openSettings(open_settings);
                 } else {
@@ -4551,30 +4551,30 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
             if (progress != null) {
                 progress.init();
             }
-            app.exteraless.privacy.BotAccountRouter.enabled();
+            app.kiwigram.privacy.BotAccountRouter.enabled();
             final long botPrivacyIdentity = UserConfig.getInstance(intentAccount).getClientUserId();
             final int botPrivacyActive = UserConfig.selectedAccount;
-            final long botPrivacySetting = app.exteraless.general.GeneralConfig.botPrivacyUserId.Long();
-            final boolean botPrivacyAlwaysAsk = app.exteraless.general.GeneralConfig.botPrivacyAlwaysAsk.Bool();
+            final long botPrivacySetting = app.kiwigram.general.GeneralConfig.botPrivacyUserId.Long();
+            final boolean botPrivacyAlwaysAsk = app.kiwigram.general.GeneralConfig.botPrivacyAlwaysAsk.Bool();
             MessagesController.getInstance(intentAccount).getUserNameResolver().resolve(username, referrer, (peerId) -> {
-                if (app.exteraless.privacy.BotAccountRouter.enabled() &&
+                if (app.kiwigram.privacy.BotAccountRouter.enabled() &&
                         (botPrivacyIdentity != UserConfig.getInstance(intentAccount).getClientUserId() ||
                          botPrivacyActive != UserConfig.selectedAccount ||
-                         botPrivacySetting != app.exteraless.general.GeneralConfig.botPrivacyUserId.Long() ||
-                         botPrivacyAlwaysAsk != app.exteraless.general.GeneralConfig.botPrivacyAlwaysAsk.Bool())) {
+                         botPrivacySetting != app.kiwigram.general.GeneralConfig.botPrivacyUserId.Long() ||
+                         botPrivacyAlwaysAsk != app.kiwigram.general.GeneralConfig.botPrivacyAlwaysAsk.Bool())) {
                     dismissLoading.run();
                     return;
                 }
                 if (peerId != null && peerId > 0 && state != 2 && game == null && auth == null &&
                         botChat == null && botChannel == null && setAsAttachBot == null && attachMenuBotToOpen == null &&
                         storyId == 0 && !liveStory && storyAlbumId == 0 && messageId == null &&
-                        app.exteraless.privacy.BotAccountRouter.enabled()) {
+                        app.kiwigram.privacy.BotAccountRouter.enabled()) {
                     TLRPC.User bot = MessagesController.getInstance(intentAccount).getUser(peerId);
                     if (bot != null && bot.bot) {
                         dismissLoading.run();
-                        app.exteraless.privacy.BotAccountRouter.resolve(this, bot, intentAccount, false, account -> {
+                        app.kiwigram.privacy.BotAccountRouter.resolve(this, bot, intentAccount, false, account -> {
                             if (account != UserConfig.selectedAccount) switchToAccount(account, true);
-                            app.exteraless.privacy.BotAccountRouter.allowNextOpen(account, bot.id);
+                            app.kiwigram.privacy.BotAccountRouter.allowNextOpen(account, bot.id);
                             runLinkRequest(account, username, group, sticker, emoji, botUser, botChat, botChannel, botChatAdminParams, message, contactToken, folderSlug, text, hasUrl, messageId, channelId, threadId, commentId, game, auth, lang, unsupportedUrl, code, loginToken, wallPaper, inputInvoiceSlug, uniqueGiftSlug, theme, voicechat, videochat, livestream, 2, videoTimestamp, setAsAttachBot, attachMenuBotToOpen, attachMenuBotChoose, botAppMaybe, botAppStartParam, progress, forceNotInternalForApps, storyId, liveStory, storyAlbumId, giftCollectionId, auctionSlug, stargiftPreviewSlug, isBoost, chatLinkSlug, botCompact, botFullscreen, openedTelegram, openProfile, forceRequest, referrer, taskId, openDirect, pollOptionId);
                         });
                         return;
@@ -6331,7 +6331,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
             if (progress != null) {
                 progress.end();
             }
-            app.exteraless.updater.GitHubUpdater.check(force || progress != null);
+            app.kiwigram.updater.GitHubUpdater.check(force || progress != null);
             return;
         }
        /*if (!ApplicationLoader.isStandaloneBuild() && !ApplicationLoader.isBetaBuild()) {
@@ -7108,7 +7108,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
         MediaController.getInstance().pauseInBackgroundIfNeeded();
         super.onPause();
         isResumed = false;
-        app.exteraless.plugins.PluginsController.getInstance().executeOnAppEvent(app.exteraless.plugins.PluginsConstants.EVENT_APP_PAUSE);
+        app.kiwigram.plugins.PluginsController.getInstance().executeOnAppEvent(app.kiwigram.plugins.PluginsConstants.EVENT_APP_PAUSE);
         pipActivityHandler.onPause();
         NotificationCenter.getGlobalInstance().postNotificationName(NotificationCenter.stopAllHeavyOperations, 4096);
         ApplicationLoader.mainInterfacePaused = true;
@@ -7234,8 +7234,8 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
 
     @Override
     protected void onDestroy() {
-        app.exteraless.icons.picker.IconPickerController.onDestroy();
-        app.exteraless.plugins.PluginsController.getInstance().executeOnAppEvent(app.exteraless.plugins.PluginsConstants.EVENT_APP_STOP);
+        app.kiwigram.icons.picker.IconPickerController.onDestroy();
+        app.kiwigram.plugins.PluginsController.getInstance().executeOnAppEvent(app.kiwigram.plugins.PluginsConstants.EVENT_APP_STOP);
         GramWalletStorageAuth.onActivityDestroyed(this);
         isActive = false;
         activeInstanceCount--;
@@ -7357,9 +7357,9 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
     protected void onResume() {
         super.onResume();
         isResumed = true;
-        app.exteraless.plugins.PluginsController.getInstance().executeOnAppEvent(app.exteraless.plugins.PluginsConstants.EVENT_APP_RESUME);
-        app.exteraless.plugins.PluginDenialNotice.flush();
-        app.exteraless.crash.CrashReportDialog.showIfPending(this);
+        app.kiwigram.plugins.PluginsController.getInstance().executeOnAppEvent(app.kiwigram.plugins.PluginsConstants.EVENT_APP_RESUME);
+        app.kiwigram.plugins.PluginDenialNotice.flush();
+        app.kiwigram.crash.CrashReportDialog.showIfPending(this);
         pipActivityHandler.onResume();
         if (onResumeStaticCallback != null) {
             onResumeStaticCallback.run();
@@ -7414,7 +7414,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
             }
         }
 
-        if (app.exteraless.OpenExteraConfig.hasProxyDisableConditions()) {
+        if (app.kiwigram.OpenKiwiConfig.hasProxyDisableConditions()) {
             ProxyUtil.registerNetworkCallback();
         }
 
@@ -8740,7 +8740,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
     }
 
     public boolean onBackPressed(boolean invoked) {
-        if (app.exteraless.icons.picker.IconPickerController.onBackPressed(invoked)) {
+        if (app.kiwigram.icons.picker.IconPickerController.onBackPressed(invoked)) {
             return false;
         }
         if (FloatingDebugController.onBackPressed(invoked)) {
@@ -8880,7 +8880,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
                         showVoiceChatTooltip(mute ? UndoView.ACTION_VOIP_SOUND_MUTED : UndoView.ACTION_VOIP_SOUND_UNMUTED);
                     }
                 }
-            } else if (app.exteraless.chats.ChatsConfig.INSTANCE.unmuteWithVolumeButtons()
+            } else if (app.kiwigram.chats.ChatsConfig.INSTANCE.unmuteWithVolumeButtons()
                     && !mainFragmentsStack.isEmpty() && (!PhotoViewer.hasInstance() || !PhotoViewer.getInstance().isVisible()) && event.getRepeatCount() == 0) {
                 BaseFragment fragment = mainFragmentsStack.get(mainFragmentsStack.size() - 1);
                 if (fragment instanceof ChatActivity && !BaseFragment.hasSheets(fragment)) {
@@ -8931,7 +8931,7 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
 
     @Override
     public boolean needPresentFragment(INavigationLayout layout, INavigationLayout.NavigationParams params) {
-        if (app.exteraless.privacy.BotAccountRouter.interceptChat(this, layout, params)) return false;
+        if (app.kiwigram.privacy.BotAccountRouter.interceptChat(this, layout, params)) return false;
         BaseFragment fragment = params.fragment;
         boolean removeLast = params.removeLast;
         boolean forceWithoutAnimation = params.noAnimation;
@@ -9541,8 +9541,8 @@ public class LaunchActivity extends BasePermissionsActivity implements INavigati
     }
 
     private static void dismissPlayerSheets() {
-        if (app.exteraless.player.PlayerSheet.instance != null) {
-            app.exteraless.player.PlayerSheet.instance.dismissImmediately();
+        if (app.kiwigram.player.PlayerSheet.instance != null) {
+            app.kiwigram.player.PlayerSheet.instance.dismissImmediately();
         }
         if (AudioPlayerAlert.instance != null) {
             AudioPlayerAlert.instance.dismiss();

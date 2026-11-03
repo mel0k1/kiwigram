@@ -2264,7 +2264,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
             return sendMessage(messages, peer, forwardFromMyName, hideCaption, notify, getConnectionsManager().getCurrentTime() + 12, scheduleRepeatPeriod,
                     replyToTopMsg, video_timestamp, payStars, monoForumPeerId, suggestionParams);
         }
-        if (app.exteraless.privacy.BotAccountRouter.guardSend(currentAccount, peer,
+        if (app.kiwigram.privacy.BotAccountRouter.guardSend(currentAccount, peer,
                 () -> sendMessage(messages, peer, forwardFromMyName, hideCaption, notify, scheduleDate, scheduleRepeatPeriod,
                         replyToTopMsg, video_timestamp, payStars, monoForumPeerId, suggestionParams))) return 0;
         int sendResult = 0;
@@ -3080,7 +3080,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
 
         TLRPC.Message newMsg = messageObject.messageOwner;
         messageObject.cancelEditing = false;
-        app.exteraless.chats.LinkedCustomEmoji.replaceForSend(currentAccount, messageObject.getDialogId(), messageObject.editingMessageEntities);
+        app.kiwigram.chats.LinkedCustomEmoji.replaceForSend(currentAccount, messageObject.getDialogId(), messageObject.editingMessageEntities);
 
         int pollAddingIndex = -1;
 
@@ -3608,7 +3608,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         if (fragment == null || fragment.getParentActivity() == null) {
             return 0;
         }
-        app.exteraless.chats.LinkedCustomEmoji.replaceForSend(currentAccount, messageObject.getDialogId(), entities);
+        app.kiwigram.chats.LinkedCustomEmoji.replaceForSend(currentAccount, messageObject.getDialogId(), entities);
 
         final TLRPC.TL_messages_editMessage req;
         if (messageObject.isEphemeral()) {
@@ -3674,7 +3674,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         }
 
         req.peer = getMessagesController().getInputPeer(messageObject.getDialogId());
-        app.exteraless.chats.LinkedCustomEmoji.replaceForSend(currentAccount, messageObject.getDialogId(), rich);
+        app.kiwigram.chats.LinkedCustomEmoji.replaceForSend(currentAccount, messageObject.getDialogId(), rich);
         req.rich_message = richMessageToInputRichMessage(rich, users);
         req.flags |= TLObject.FLAG_23;
         if (messageObject.scheduled) {
@@ -4498,10 +4498,10 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
     }
 
     public void sendMessage(SendMessageParams originalParams) {
-        app.exteraless.plugins.HookResult hookResult = app.exteraless.plugins.HookResult.DEFAULT;
-        // exteraless plugins: исходящее сообщение через on_send_message_hook (CANCEL = не отправлять)
-        if (app.exteraless.plugins.PluginsController.getInstance().hasSendMessageHooks()) {
-            hookResult = app.exteraless.plugins.PluginsController.getInstance()
+        app.kiwigram.plugins.HookResult hookResult = app.kiwigram.plugins.HookResult.DEFAULT;
+        // kiwigram plugins: исходящее сообщение через on_send_message_hook (CANCEL = не отправлять)
+        if (app.kiwigram.plugins.PluginsController.getInstance().hasSendMessageHooks()) {
+            hookResult = app.kiwigram.plugins.PluginsController.getInstance()
                     .executeOnSendMessageHook(currentAccount, originalParams);
             if (hookResult.isCancel()) {
                 return;
@@ -4509,9 +4509,9 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         }
         SendMessageParams replacement = hookResult.replacement(SendMessageParams.class);
         final SendMessageParams sendMessageParams = replacement != null ? replacement : originalParams;
-        if (app.exteraless.privacy.BotAccountRouter.guardSend(currentAccount, sendMessageParams.peer, () -> sendMessage(sendMessageParams))) return;
-        app.exteraless.chats.DeletedReplyQuote.rewrite(currentAccount, sendMessageParams);
-        app.exteraless.chats.LinkedCustomEmoji.replaceForSend(currentAccount, sendMessageParams.peer, sendMessageParams.entities);
+        if (app.kiwigram.privacy.BotAccountRouter.guardSend(currentAccount, sendMessageParams.peer, () -> sendMessage(sendMessageParams))) return;
+        app.kiwigram.chats.DeletedReplyQuote.rewrite(currentAccount, sendMessageParams);
+        app.kiwigram.chats.LinkedCustomEmoji.replaceForSend(currentAccount, sendMessageParams.peer, sendMessageParams.entities);
         final SendMessageChatArguments sendMessageChatArguments = sendMessageParams.sendMessageChatArguments != null ?
                 sendMessageParams.sendMessageChatArguments : SendMessageChatArguments.EMPTY;
         String message = sendMessageParams.message;
@@ -4582,7 +4582,7 @@ public class SendMessagesHelper extends BaseController implements NotificationCe
         if (richMessage != null && DialogObject.isEncryptedDialog(peer)) {
             return;
         }
-        app.exteraless.chats.LinkedCustomEmoji.replaceForSend(currentAccount, peer, richMessage);
+        app.kiwigram.chats.LinkedCustomEmoji.replaceForSend(currentAccount, peer, richMessage);
         if (message == null && caption == null && richMessage == null) {
             caption = "";
         }

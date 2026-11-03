@@ -361,8 +361,8 @@ import tw.nekomimi.nekogram.utils.AndroidUtil;
 import tw.nekomimi.nekogram.utils.ProxyUtil;
 import xyz.nextalone.nagram.NaConfig;
 
-import app.exteraless.appearance.M3CircularProgress;
-import app.exteraless.utils.VideoSubtitlesHelper;
+import app.kiwigram.appearance.M3CircularProgress;
+import app.kiwigram.utils.VideoSubtitlesHelper;
 import tw.nekomimi.nekogram.helpers.MessageHelper;
 import tw.nekomimi.nekogram.streaming.MediaStreamingProvider;
 
@@ -21948,7 +21948,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
 
     /** Шаг перемотки двойным тапом, ChatsConfig.doubleTapSeekDuration (5/10/15/30 с). */
     private static long doubleTapSeekMillis() {
-        return app.exteraless.chats.ChatsConfig.seekDurationSeconds() * 1000L;
+        return app.kiwigram.chats.ChatsConfig.seekDurationSeconds() * 1000L;
     }
 
     long totalRewinding;
@@ -22029,7 +22029,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     private boolean enableSwipeToPiP() {
         return (pipItem.getVisibility() == View.VISIBLE
                     || (menuItem.getVisibility() == View.VISIBLE && menuItem.isSubItemVisible(gallery_menu_pip)))
-                && app.exteraless.chats.ChatsConfig.swipeToPip.Bool()
+                && app.kiwigram.chats.ChatsConfig.swipeToPip.Bool()
                 && pipAvailable && textureUploaded
                 && videoPlayer != null && videoPlayer.getRepeatCount() == 0
                 && checkInlinePermissions() && !changingTextureView && !switchingInlineMode && !isInline;
@@ -24915,7 +24915,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
             return;
         }
         Bitmap bitmap = centerImage != null ? centerImage.getBitmap() : null;
-        boolean enabled = !centerImageIsVideo && app.exteraless.chats.ChatsConfig.hdrPhotos.Bool()
+        boolean enabled = !centerImageIsVideo && app.kiwigram.chats.ChatsConfig.hdrPhotos.Bool()
                 && AndroidUtil.hasGainmap(bitmap);
         setWindowHdrColorMode(enabled);
     }

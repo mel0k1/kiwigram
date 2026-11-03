@@ -21,20 +21,20 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import app.exteraless.ai.ui.AiSettingsActivity;
-import app.exteraless.icons.IconPacksActivity;
-import app.exteraless.pillstack.pills.weather.WeatherSettingsActivity;
-import app.exteraless.settings.OpenExteraCloudActivity;
-import app.exteraless.settings.OpenExteraGlyphActivity;
-import app.exteraless.pillstack.PillStackSettingsActivity;
-import app.exteraless.plugins.ui.PluginsActivity;
-import app.exteraless.settings.OpenExteraAppNavigationActivity;
-import app.exteraless.settings.OpenExteraAppearanceActivity;
-import app.exteraless.settings.OpenExteraAyuMomentsActivity;
-import app.exteraless.settings.OpenExteraChatsActivity;
-import app.exteraless.settings.OpenExteraGeneralActivity;
-import app.exteraless.settings.OpenExteraOtherActivity;
-import app.exteraless.settings.OpenExteraSettingsActivity;
+import app.kiwigram.ai.ui.AiSettingsActivity;
+import app.kiwigram.icons.IconPacksActivity;
+import app.kiwigram.pillstack.pills.weather.WeatherSettingsActivity;
+import app.kiwigram.settings.OpenKiwiCloudActivity;
+import app.kiwigram.settings.OpenKiwiGlyphActivity;
+import app.kiwigram.pillstack.PillStackSettingsActivity;
+import app.kiwigram.plugins.ui.PluginsActivity;
+import app.kiwigram.settings.OpenKiwiAppNavigationActivity;
+import app.kiwigram.settings.OpenKiwiAppearanceActivity;
+import app.kiwigram.settings.OpenKiwiAyuMomentsActivity;
+import app.kiwigram.settings.OpenKiwiChatsActivity;
+import app.kiwigram.settings.OpenKiwiGeneralActivity;
+import app.kiwigram.settings.OpenKiwiOtherActivity;
+import app.kiwigram.settings.OpenKiwiSettingsActivity;
 import tw.nekomimi.nekogram.settings.BaseNekoSettingsActivity;
 import tw.nekomimi.nekogram.settings.BaseNekoXSettingsActivity;
 import tw.nekomimi.nekogram.settings.NekoAboutActivity;
@@ -45,7 +45,7 @@ import tw.nekomimi.nekogram.settings.NekoTranslatorSettingsActivity;
 public class SettingsHelper {
 
     private static final String HOST_NAGRAM = "nasettings";
-    private static final String HOST_EXTERALESS = "exteraless";
+    private static final String HOST_KIWIGRAM = "kiwigram";
 
     private static final Map<String, String> SEARCH_TITLE_ALIASES = new HashMap<>();
     private static final Map<String, String> TRANSLATOR_ROWS = new HashMap<>();
@@ -77,7 +77,7 @@ public class SettingsHelper {
         SEARCH_TITLE_ALIASES.put("OEGeneral:translator", "TranslatorSettings");
         SEARCH_TITLE_ALIASES.put("OEGeneral:translateInSheet", "OEChatsTranslateInSheet");
         SEARCH_TITLE_ALIASES.put("OEGeneral:glyph", "OEGlyphTitle");
-        SEARCH_TITLE_ALIASES.put("OpenExtera:channel", "ProfileChannel");
+        SEARCH_TITLE_ALIASES.put("OpenKiwi:channel", "ProfileChannel");
         SEARCH_TITLE_ALIASES.put("OEGeneral:downloadSpeed", "OEGeneralSpeedHeader");
         SEARCH_TITLE_ALIASES.put("OEAppearance:md3Styles", "OEAppearanceMaterialDesign3");
         SEARCH_TITLE_ALIASES.put("OEAppearance:md3Loading", "OEAppearanceNewLoadingStyle");
@@ -143,7 +143,7 @@ public class SettingsHelper {
         }
     }
 
-    private static final Set<String> EXTERALESS_SCREENS = new HashSet<>(Arrays.asList(
+    private static final Set<String> KIWIGRAM_SCREENS = new HashSet<>(Arrays.asList(
             "settings", "general", "appearance", "chats", "plugins", "pillstack", "other",
             "ayumoments", "navigation", "menus", "media", "hiding"));
 
@@ -154,10 +154,10 @@ public class SettingsHelper {
         if (path.startsWith(HOST_NAGRAM + "/")) {
             return true;
         }
-        if (!path.startsWith(HOST_EXTERALESS + "/")) {
+        if (!path.startsWith(HOST_KIWIGRAM + "/")) {
             return false;
         }
-        return EXTERALESS_SCREENS.contains(path.substring(HOST_EXTERALESS.length() + 1));
+        return KIWIGRAM_SCREENS.contains(path.substring(HOST_KIWIGRAM.length() + 1));
     }
 
     public static String linkPathFor(String key) {
@@ -165,28 +165,28 @@ public class SettingsHelper {
             return null;
         }
         switch (key) {
-            case "exteraless":
-                return HOST_EXTERALESS + "/settings";
-            case "exteraless_general":
-                return HOST_EXTERALESS + "/general";
-            case "exteraless_appearance":
-                return HOST_EXTERALESS + "/appearance";
-            case "exteraless_chats":
-                return HOST_EXTERALESS + "/chats";
-            case "exteraless_menus":
-                return HOST_EXTERALESS + "/menus";
-            case "exteraless_media":
-                return HOST_EXTERALESS + "/media";
-            case "exteraless_hiding":
-                return HOST_EXTERALESS + "/hiding";
-            case "exteraless_other":
-                return HOST_EXTERALESS + "/other";
-            case "exteraless_ayumoments":
-                return HOST_EXTERALESS + "/ayumoments";
+            case "kiwigram":
+                return HOST_KIWIGRAM + "/settings";
+            case "kiwigram_general":
+                return HOST_KIWIGRAM + "/general";
+            case "kiwigram_appearance":
+                return HOST_KIWIGRAM + "/appearance";
+            case "kiwigram_chats":
+                return HOST_KIWIGRAM + "/chats";
+            case "kiwigram_menus":
+                return HOST_KIWIGRAM + "/menus";
+            case "kiwigram_media":
+                return HOST_KIWIGRAM + "/media";
+            case "kiwigram_hiding":
+                return HOST_KIWIGRAM + "/hiding";
+            case "kiwigram_other":
+                return HOST_KIWIGRAM + "/other";
+            case "kiwigram_ayumoments":
+                return HOST_KIWIGRAM + "/ayumoments";
             case "pillstack":
-                return HOST_EXTERALESS + "/pillstack";
-            case "exteraless_navigation":
-                return HOST_EXTERALESS + "/navigation";
+                return HOST_KIWIGRAM + "/pillstack";
+            case "kiwigram_navigation":
+                return HOST_KIWIGRAM + "/navigation";
             default:
                 return HOST_NAGRAM + "/" + key;
         }
@@ -202,12 +202,12 @@ public class SettingsHelper {
             unknown.run();
             return;
         }
-        final boolean exteraless = HOST_EXTERALESS.equals(segments.get(0));
-        if (!exteraless && !HOST_NAGRAM.equals(segments.get(0))) {
+        final boolean kiwigram = HOST_KIWIGRAM.equals(segments.get(0));
+        if (!kiwigram && !HOST_NAGRAM.equals(segments.get(0))) {
             unknown.run();
             return;
         }
-        if (exteraless && segments.size() < 2) {
+        if (kiwigram && segments.size() < 2) {
             unknown.run();
             return;
         }
@@ -218,10 +218,10 @@ public class SettingsHelper {
         BaseFragment fragment;
         BaseNekoSettingsActivity neko_fragment = null;
         BaseNekoXSettingsActivity nekox_fragment = null;
-        OpenExteraAppNavigationActivity navigation_fragment = null;
-        String screen = exteraless ? segments.get(1) : nagramScreen(segments.size() == 1 ? null : segments.get(1), row);
-        if (screen == null && segments.size() == 2 && segments.get(1).startsWith("exteraless_")) {
-            String base = segments.get(1).substring("exteraless_".length());
+        OpenKiwiAppNavigationActivity navigation_fragment = null;
+        String screen = kiwigram ? segments.get(1) : nagramScreen(segments.size() == 1 ? null : segments.get(1), row);
+        if (screen == null && segments.size() == 2 && segments.get(1).startsWith("kiwigram_")) {
+            String base = segments.get(1).substring("kiwigram_".length());
             if (row != null && MOVED_ROWS.containsKey(base + ":" + row)) {
                 screen = base;
             }
@@ -235,37 +235,37 @@ public class SettingsHelper {
         if (screen != null) {
             switch (screen) {
                 case "settings":
-                    fragment = neko_fragment = new OpenExteraSettingsActivity();
+                    fragment = neko_fragment = new OpenKiwiSettingsActivity();
                     break;
                 case "general":
                     if (TRANSLATOR_ROWS.containsKey(row)) {
                         fragment = nekox_fragment = new NekoTranslatorSettingsActivity();
                         row = TRANSLATOR_ROWS.get(row);
                     } else {
-                        fragment = neko_fragment = new OpenExteraGeneralActivity();
+                        fragment = neko_fragment = new OpenKiwiGeneralActivity();
                     }
                     break;
                 case "appearance":
                     fragment = neko_fragment = "useSystemEmoji".equals(row)
-                            ? new NekoEmojiSettingsActivity() : new OpenExteraAppearanceActivity();
+                            ? new NekoEmojiSettingsActivity() : new OpenKiwiAppearanceActivity();
                     break;
                 case "chats":
-                    fragment = neko_fragment = new OpenExteraChatsActivity();
+                    fragment = neko_fragment = new OpenKiwiChatsActivity();
                     break;
                 case "menus":
-                    fragment = neko_fragment = new OpenExteraChatsActivity(OpenExteraChatsActivity.SCREEN_MENUS);
+                    fragment = neko_fragment = new OpenKiwiChatsActivity(OpenKiwiChatsActivity.SCREEN_MENUS);
                     break;
                 case "media":
-                    fragment = neko_fragment = new OpenExteraChatsActivity(OpenExteraChatsActivity.SCREEN_MEDIA);
+                    fragment = neko_fragment = new OpenKiwiChatsActivity(OpenKiwiChatsActivity.SCREEN_MEDIA);
                     break;
                 case "hiding":
-                    fragment = neko_fragment = new OpenExteraChatsActivity(OpenExteraChatsActivity.SCREEN_HIDING);
+                    fragment = neko_fragment = new OpenKiwiChatsActivity(OpenKiwiChatsActivity.SCREEN_HIDING);
                     break;
                 case "other":
-                    fragment = neko_fragment = new OpenExteraOtherActivity();
+                    fragment = neko_fragment = new OpenKiwiOtherActivity();
                     break;
                 case "ayumoments":
-                    fragment = neko_fragment = new OpenExteraAyuMomentsActivity();
+                    fragment = neko_fragment = new OpenKiwiAyuMomentsActivity();
                     break;
                 case "pillstack":
                     fragment = neko_fragment = new PillStackSettingsActivity();
@@ -274,7 +274,7 @@ public class SettingsHelper {
                     fragment = new PluginsActivity();
                     break;
                 case "navigation":
-                    fragment = navigation_fragment = new OpenExteraAppNavigationActivity();
+                    fragment = navigation_fragment = new OpenKiwiAppNavigationActivity();
                     break;
                 case "privacy":
                     fragment = new PrivacySettingsActivity();
@@ -301,29 +301,29 @@ public class SettingsHelper {
                 case "t":
                     fragment = nekox_fragment = new NekoTranslatorSettingsActivity();
                     break;
-                case "exteraless":
-                    fragment = neko_fragment = new OpenExteraSettingsActivity();
+                case "kiwigram":
+                    fragment = neko_fragment = new OpenKiwiSettingsActivity();
                     break;
-                case "exteraless_general":
+                case "kiwigram_general":
                     if (TRANSLATOR_ROWS.containsKey(row)) {
                         fragment = nekox_fragment = new NekoTranslatorSettingsActivity();
                         row = TRANSLATOR_ROWS.get(row);
                     } else {
-                        fragment = neko_fragment = new OpenExteraGeneralActivity();
+                        fragment = neko_fragment = new OpenKiwiGeneralActivity();
                     }
                     break;
-                case "exteraless_appearance":
+                case "kiwigram_appearance":
                     fragment = neko_fragment = "useSystemEmoji".equals(row)
-                            ? new NekoEmojiSettingsActivity() : new OpenExteraAppearanceActivity();
+                            ? new NekoEmojiSettingsActivity() : new OpenKiwiAppearanceActivity();
                     break;
-                case "exteraless_chats":
-                    fragment = neko_fragment = new OpenExteraChatsActivity();
+                case "kiwigram_chats":
+                    fragment = neko_fragment = new OpenKiwiChatsActivity();
                     break;
-                case "exteraless_other":
-                    fragment = neko_fragment = new OpenExteraOtherActivity();
+                case "kiwigram_other":
+                    fragment = neko_fragment = new OpenKiwiOtherActivity();
                     break;
-                case "exteraless_ayumoments":
-                    fragment = neko_fragment = new OpenExteraAyuMomentsActivity();
+                case "kiwigram_ayumoments":
+                    fragment = neko_fragment = new OpenKiwiAyuMomentsActivity();
                     break;
                 case "pillstack":
                     fragment = neko_fragment = new PillStackSettingsActivity();
@@ -334,14 +334,14 @@ public class SettingsHelper {
                 case "iconpacks":
                     fragment = neko_fragment = new IconPacksActivity();
                     break;
-                case "exteraless_ai":
+                case "kiwigram_ai":
                     fragment = neko_fragment = new AiSettingsActivity();
                     break;
-                case "exteraless_cloud":
-                    fragment = neko_fragment = new OpenExteraCloudActivity();
+                case "kiwigram_cloud":
+                    fragment = neko_fragment = new OpenKiwiCloudActivity();
                     break;
-                case "exteraless_glyph":
-                    fragment = neko_fragment = new OpenExteraGlyphActivity();
+                case "kiwigram_glyph":
+                    fragment = neko_fragment = new OpenKiwiGlyphActivity();
                     break;
                 case "send_logs":
                     sendLogs(activity, false);
@@ -362,7 +362,7 @@ public class SettingsHelper {
                 BaseNekoSettingsActivity finalNeko_fragment = neko_fragment;
                 AndroidUtilities.runOnUIThread(() -> finalNeko_fragment.scrollToRow(rowFinal, unknown));
             } else if (navigation_fragment != null) {
-                OpenExteraAppNavigationActivity finalNavigation_fragment = navigation_fragment;
+                OpenKiwiAppNavigationActivity finalNavigation_fragment = navigation_fragment;
                 AndroidUtilities.runOnUIThread(() -> finalNavigation_fragment.scrollToRow(rowFinal, unknown));
             } else if (nekox_fragment != null) {
                 BaseNekoXSettingsActivity finalNekoX_fragment = nekox_fragment;
@@ -445,21 +445,21 @@ public class SettingsHelper {
         ArrayList<BaseNekoXSettingsActivity> fragments = new ArrayList<>();
         fragments.add(new NekoTranslatorSettingsActivity());
 
-        ArrayList<BaseNekoSettingsActivity> exteralessFragments = new ArrayList<>();
-        exteralessFragments.add(new OpenExteraSettingsActivity());
-        exteralessFragments.add(new OpenExteraGeneralActivity());
-        exteralessFragments.add(new OpenExteraAppearanceActivity());
-        exteralessFragments.add(new OpenExteraChatsActivity());
-        exteralessFragments.add(new OpenExteraChatsActivity(OpenExteraChatsActivity.SCREEN_MENUS));
-        exteralessFragments.add(new OpenExteraChatsActivity(OpenExteraChatsActivity.SCREEN_MEDIA));
-        exteralessFragments.add(new OpenExteraChatsActivity(OpenExteraChatsActivity.SCREEN_HIDING));
-        exteralessFragments.add(new OpenExteraOtherActivity());
-        exteralessFragments.add(new OpenExteraAyuMomentsActivity());
-        exteralessFragments.add(new PillStackSettingsActivity());
-        exteralessFragments.add(new AiSettingsActivity());
+        ArrayList<BaseNekoSettingsActivity> kiwigramFragments = new ArrayList<>();
+        kiwigramFragments.add(new OpenKiwiSettingsActivity());
+        kiwigramFragments.add(new OpenKiwiGeneralActivity());
+        kiwigramFragments.add(new OpenKiwiAppearanceActivity());
+        kiwigramFragments.add(new OpenKiwiChatsActivity());
+        kiwigramFragments.add(new OpenKiwiChatsActivity(OpenKiwiChatsActivity.SCREEN_MENUS));
+        kiwigramFragments.add(new OpenKiwiChatsActivity(OpenKiwiChatsActivity.SCREEN_MEDIA));
+        kiwigramFragments.add(new OpenKiwiChatsActivity(OpenKiwiChatsActivity.SCREEN_HIDING));
+        kiwigramFragments.add(new OpenKiwiOtherActivity());
+        kiwigramFragments.add(new OpenKiwiAyuMomentsActivity());
+        kiwigramFragments.add(new PillStackSettingsActivity());
+        kiwigramFragments.add(new AiSettingsActivity());
 
-        String e_title = getString(R.string.OpenExtera);
-        for (BaseNekoSettingsActivity fragment : exteralessFragments) {
+        String e_title = getString(R.string.OpenKiwi);
+        for (BaseNekoSettingsActivity fragment : kiwigramFragments) {
             try {
                 fragment.buildRowsForSearch();
             } catch (Exception e) {

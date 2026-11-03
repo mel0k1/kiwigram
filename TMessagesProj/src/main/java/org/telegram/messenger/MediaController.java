@@ -527,7 +527,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
         public boolean isHighQuality() {
             if (highQuality == null)
                 // exteraGram 12.9.0, MediaController.java:1269
-                return app.exteraless.chats.ChatsConfig.alwaysSendInHD.Bool() || SharedConfig.photoHighQualityDefault;
+                return app.kiwigram.chats.ChatsConfig.alwaysSendInHD.Bool() || SharedConfig.photoHighQualityDefault;
             return highQuality;
         }
 
@@ -4130,7 +4130,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                         }
                         shouldSavePositionForCurrentAudio = name;
                     }
-                    if ((messageObject.getDuration() >= 10 * 60 || app.exteraless.player.Md3Player.enabled()) && Math.abs(currentMusicPlaybackSpeed - 1.0f) > 0.001f) {
+                    if ((messageObject.getDuration() >= 10 * 60 || app.kiwigram.player.Md3Player.enabled()) && Math.abs(currentMusicPlaybackSpeed - 1.0f) > 0.001f) {
                         audioPlayer.setPlaybackSpeed(Math.round(currentMusicPlaybackSpeed * 10f) / 10f, 1f);
                     }
                 }
@@ -4492,8 +4492,8 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
             return;
         }
         boolean shouldPause =
-                (playing.isVoice() && app.exteraless.chats.ChatsConfig.INSTANCE.pauseOnMinimizeVoice())
-                        || (playing.isRoundVideo() && app.exteraless.chats.ChatsConfig.INSTANCE.pauseOnMinimizeRound());
+                (playing.isVoice() && app.kiwigram.chats.ChatsConfig.INSTANCE.pauseOnMinimizeVoice())
+                        || (playing.isRoundVideo() && app.kiwigram.chats.ChatsConfig.INSTANCE.pauseOnMinimizeRound());
         if (shouldPause && isPlayingMessage(playing) && !isMessagePaused()) {
             pauseMessage(playing);
         }
@@ -4756,7 +4756,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
             @Override
             public void onRecordingStarted() {
                 recordStartTime = System.currentTimeMillis();
-                app.exteraless.glyph.GlyphController.getInstance().onRecordingStarted();
+                app.kiwigram.glyph.GlyphController.getInstance().onRecordingStarted();
                 if (!audioRecorderV2Stopping) {
                     NotificationCenter.getInstance(recordingCurrentAccount).postNotificationName(
                             NotificationCenter.recordStarted,
@@ -4769,7 +4769,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
             @Override
             public void onRecordingResumed() {
                 requestRecordAudioFocus(true);
-                app.exteraless.glyph.GlyphController.getInstance().onRecordingStarted();
+                app.kiwigram.glyph.GlyphController.getInstance().onRecordingStarted();
                 NotificationCenter.getInstance(recordingCurrentAccount).postNotificationName(
                         NotificationCenter.recordResumed
                 );
@@ -5365,7 +5365,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
                         samplesCount = 0;
                         fileBuffer.rewind();
                         audioRecorder.startRecording();
-                        app.exteraless.glyph.GlyphController.getInstance().onRecordingStarted();
+                        app.kiwigram.glyph.GlyphController.getInstance().onRecordingStarted();
                         recordQueue.postRunnable(recordRunnable);
 
                         NotificationCenter.getInstance(recordingCurrentAccount).postNotificationName(NotificationCenter.recordResumed);
@@ -5511,7 +5511,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
             recordQueue.postRunnable(recordRunnable);
             AndroidUtilities.runOnUIThread(() -> {
                 recordStartRunnable = null;
-                app.exteraless.glyph.GlyphController.getInstance().onRecordingStarted();
+                app.kiwigram.glyph.GlyphController.getInstance().onRecordingStarted();
                 NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.recordStarted, guid, true);
             });
         }, paused ? 500 : 50);
@@ -5683,7 +5683,7 @@ public class MediaController implements AudioManager.OnAudioFocusChangeListener,
     }
 
     public void stopRecording(final int send, boolean notify, int scheduleDate, boolean once, long payStars) {
-        app.exteraless.glyph.GlyphController.getInstance().onRecordingStopped();
+        app.kiwigram.glyph.GlyphController.getInstance().onRecordingStopped();
         if (audioRecorderV2Active) {
             stopRecordingV2(send, notify, scheduleDate, once, payStars);
             return;

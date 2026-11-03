@@ -24,7 +24,7 @@ elyx_compare_folder output: {"ok": True, "created_or_modified": [...],
                           differs (client should upload them);
     deleted             — server paths the client no longer has.
 
-Reload goes through extera_utils.plugin_loader (which owns the plugin
+Reload goes through kiwi_utils.plugin_loader (which owns the plugin
 registry and lifecycle) so hooks/menus/settings rebuild exactly like a normal
 reload; when the plugin is not registered there (e.g. host runs), the modules
 are evicted so the next enable loads fresh code.
@@ -166,7 +166,7 @@ def _reload_loaded_plugin(plugin_id: str) -> Dict[str, Any]:
     """Reload through the host plugin loader; degrade to module eviction."""
     state = get_state(plugin_id)
     try:
-        plugin_loader = importlib.import_module("extera_utils.plugin_loader")
+        plugin_loader = importlib.import_module("kiwi_utils.plugin_loader")
     except Exception:
         plugin_loader = None
 
