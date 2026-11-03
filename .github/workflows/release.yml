@@ -98,7 +98,9 @@ jobs:
           export LOCAL_PROPERTIES="${{ secrets.LOCAL_PROPERTIES }}"
           export BUILD_TIMESTAMP=$(date +%s)
           echo "build_timestamp=$BUILD_TIMESTAMP" >> "$GITHUB_OUTPUT"
-          ./gradlew TMessagesProj:assembleRelease
+          # debugTools: встроенный JankProfiler в настройках (выключен, пока
+          # пользователь не запустит его сам) — для замеров плавности на CI-сборках.
+          ./gradlew -PdebugTools=true TMessagesProj:assembleRelease
       - name: Upload arm64-v8a Artifact
         uses: actions/upload-artifact@v7
         with:
