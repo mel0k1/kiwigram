@@ -8,7 +8,6 @@
 
 package org.telegram.ui.Components;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -19,6 +18,10 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.PorterDuffXfermode;
 import androidx.annotation.Keep;
 import androidx.core.graphics.ColorUtils;
+import androidx.dynamicanimation.animation.FloatPropertyCompat;
+import androidx.dynamicanimation.animation.SpringAnimation;
+
+import app.kiwigram.appearance.KiwiMotion;
 
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -38,7 +41,7 @@ public class RadioButton extends View {
     private int color;
 
     private float progress;
-    private ObjectAnimator checkAnimator;
+    private SpringAnimation checkAnimator;
 
     private boolean attachedToWindow;
     private boolean isChecked;
@@ -113,6 +116,18 @@ public class RadioButton extends View {
         invalidate();
     }
 
+    private static final FloatPropertyCompat<RadioButton> PROGRESS_PROPERTY = new FloatPropertyCompat<RadioButton>("progress") {
+        @Override
+        public float getValue(RadioButton object) {
+            return object.getProgress();
+        }
+
+        @Override
+        public void setValue(RadioButton object, float value) {
+            object.setProgress(value);
+        }
+    };
+
     private void cancelCheckAnimator() {
         if (checkAnimator != null) {
             checkAnimator.cancel();
@@ -120,9 +135,13 @@ public class RadioButton extends View {
     }
 
     private void animateToCheckedState(boolean newCheckedState) {
-        checkAnimator = ObjectAnimator.ofFloat(this, "progress", newCheckedState ? 1 : 0);
-        checkAnimator.setDuration(200);
-        checkAnimator.start();
+        // M3E: заезд — spatial с лёгким отскоком, отвод — effects без отскока;
+        // прерываемый спринг сохраняет скорость при переключении выбора.
+        if (checkAnimator == null) {
+            checkAnimator = new SpringAnimation(this, PROGRESS_PROPERTY);
+        }
+        checkAnimator.setSpring(newCheckedState ? KiwiMotion.spatialDefault() : KiwiMotion.effectsDefault());
+        checkAnimator.animateToFinalPosition(newCheckedState ? 1f : 0f);
     }
 
     @Override
@@ -161,9 +180,11 @@ public class RadioButton extends View {
         if (progress <= 0.5f) {
             paint.setColor(color);
             checkedPaint.setColor(color);
-            circleProgress = progress / 0.5f;
+            circleProgress = Math.max(0f, progress) / 0.5f;
         } else {
-            circleProgress = 2.0f - progress / 0.5f;
+            // кламп [0,1]: иначе перелёт пружины дал бы отрицательный circleProgress —
+            // канал цвета ушёл бы за 255 (Color.rgb не зажимает), точка сжалась бы мимо полного
+            circleProgress = Utilities.clamp(2.0f - progress / 0.5f, 1f, 0f);
             int r1 = Color.red(color);
             int rD = (int) ((Color.red(checkedColor) - r1) * (1.0f - circleProgress));
             int g1 = Color.green(color);

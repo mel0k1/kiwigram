@@ -8,9 +8,6 @@
 
 package org.telegram.ui.Components;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -24,6 +21,10 @@ import android.text.TextPaint;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import androidx.dynamicanimation.animation.FloatPropertyCompat;
+import androidx.dynamicanimation.animation.SpringAnimation;
+
+import app.kiwigram.appearance.KiwiMotion;
 import org.telegram.messenger.AndroidUtilities;
 
 public class CheckBox extends View {
@@ -45,7 +46,8 @@ public class CheckBox extends View {
     private boolean hasBorder;
 
     private float progress;
-    private ObjectAnimator checkAnimator;
+    private SpringAnimation checkAnimator;
+    private boolean checkSpringRunning;
     private boolean isCheckAnimation = true;
 
     private boolean attachedToWindow;
@@ -153,29 +155,41 @@ public class CheckBox extends View {
         invalidate();
     }
 
+    private static final FloatPropertyCompat<CheckBox> PROGRESS_PROPERTY = new FloatPropertyCompat<CheckBox>("progress") {
+        @Override
+        public float getValue(CheckBox object) {
+            return object.getProgress();
+        }
+
+        @Override
+        public void setValue(CheckBox object, float value) {
+            object.setProgress(value);
+        }
+    };
+
     private void cancelCheckAnimator() {
         if (checkAnimator != null) {
             checkAnimator.cancel();
-            checkAnimator = null;
         }
+        checkSpringRunning = false;
     }
 
     private void animateToCheckedState(boolean newCheckedState) {
         isCheckAnimation = newCheckedState;
-        checkAnimator = ObjectAnimator.ofFloat(this, "progress", newCheckedState ? 1 : 0);
-        checkAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (animation.equals(checkAnimator)) {
-                    checkAnimator = null;
-                }
+        // M3E: заезд — spatial-пружина с лёгким отскоком, отвод — effects без отскока;
+        // повторный тап перенаправляет спринг с сохранением скорости.
+        if (checkAnimator == null) {
+            checkAnimator = new SpringAnimation(this, PROGRESS_PROPERTY);
+            checkAnimator.addEndListener((animation, canceled, value, velocity) -> {
+                checkSpringRunning = false;
                 if (!isChecked) {
                     checkedText = null;
                 }
-            }
-        });
-        checkAnimator.setDuration(300);
-        checkAnimator.start();
+            });
+        }
+        checkSpringRunning = true;
+        checkAnimator.setSpring(newCheckedState ? KiwiMotion.spatialDefault() : KiwiMotion.effectsDefault());
+        checkAnimator.animateToFinalPosition(newCheckedState ? 1f : 0f);
     }
 
     @Override
@@ -202,7 +216,7 @@ public class CheckBox extends View {
     public void setNum(int num) {
         if (num >= 0) {
             checkedText = "" + (num + 1);
-        } else if (checkAnimator == null) {
+        } else if (!checkSpringRunning) {
             checkedText = null;
         }
         invalidate();
@@ -241,8 +255,9 @@ public class CheckBox extends View {
             drawBitmap.eraseColor(0);
             float rad = getMeasuredWidth() / 2;
 
-            float roundProgress = progress >= 0.5f ? 1.0f : progress / 0.5f;
-            float checkProgress = progress < 0.5f ? 0.0f : (progress - 0.5f) / 0.5f;
+            float roundProgress = progress >= 0.5f ? 1.0f : Math.max(0f, progress) / 0.5f;
+            // кламп сверху: маска-ластик при перелёте пружины выела бы галочку целиком
+            float checkProgress = progress < 0.5f ? 0.0f : Math.min(1.0f, (progress - 0.5f) / 0.5f);
 
             float roundProgressCheckState = isCheckAnimation ? progress : (1.0f - progress);
             if (roundProgressCheckState < progressBounceDiff) {

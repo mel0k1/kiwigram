@@ -3,9 +3,6 @@ package org.telegram.ui.Components;
 import static org.telegram.messenger.AndroidUtilities.dp;
 import static org.telegram.messenger.AndroidUtilities.lerp;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -22,10 +19,14 @@ import android.view.View;
 
 import androidx.annotation.Keep;
 import androidx.core.graphics.ColorUtils;
+import androidx.dynamicanimation.animation.FloatValueHolder;
+import androidx.dynamicanimation.animation.SpringAnimation;
 
+import app.kiwigram.appearance.KiwiMotion;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.GenericProvider;
 import org.telegram.messenger.LocaleController;
+import org.telegram.messenger.Utilities;
 import org.telegram.ui.ActionBar.MessageDrawable;
 import org.telegram.ui.ActionBar.Theme;
 
@@ -73,7 +74,8 @@ public class CheckBoxBase {
 
     private boolean forbidden;
     private float progress;
-    private ObjectAnimator checkAnimator;
+    private SpringAnimation checkAnimator;
+    private boolean checkSpringRunning;
 
     private boolean isChecked;
 
@@ -271,27 +273,27 @@ public class CheckBoxBase {
     public void cancelCheckAnimator() {
         if (checkAnimator != null) {
             checkAnimator.cancel();
-            checkAnimator = null;
         }
+        checkSpringRunning = false;
     }
 
     public long animationDuration = 200;
+
     private void animateToCheckedState(boolean newCheckedState) {
-        checkAnimator = ObjectAnimator.ofFloat(this, "progress", newCheckedState ? 1 : 0);
-        checkAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (animation.equals(checkAnimator)) {
-                    checkAnimator = null;
-                }
+        // M3E: заезд — spatial с лёгким отскоком, отвод — effects без отскока;
+        // один прерываемый спринг сохраняет скорость при повторном тапе.
+        if (checkAnimator == null) {
+            checkAnimator = new SpringAnimation(new FloatValueHolder(progress));
+            checkAnimator.addEndListener((animation, canceled, value, velocity) -> {
+                checkSpringRunning = false;
                 if (!isChecked) {
                     checkedText = null;
                 }
-            }
-        });
-        checkAnimator.setInterpolator(CubicBezierInterpolator.EASE_OUT);
-        checkAnimator.setDuration(animationDuration);
-        checkAnimator.start();
+            });
+        }
+        checkSpringRunning = true;
+        checkAnimator.setSpring(newCheckedState ? KiwiMotion.spatialDefault() : KiwiMotion.effectsDefault());
+        checkAnimator.animateToFinalPosition(newCheckedState ? 1f : 0f);
     }
 
     public void setColor(int background, int background2, int check) {
@@ -356,7 +358,7 @@ public class CheckBoxBase {
         String newText = null;
         if (num >= 0) {
             newText = "" + (num + 1);
-        } else if (checkAnimator != null) {
+        } else if (checkSpringRunning) {
             newText = checkedText;
         }
 
@@ -405,7 +407,10 @@ public class CheckBoxBase {
         }
 
         float progress = forbidden ? 1f : this.progress;
-        float roundProgress = progress >= 0.5f ? 1.0f : progress / 0.5f;
+        // цветовые/альфа-пути клампим: Color.argb не зажимает каналы, и перелёт
+        // пружины дал бы байтовый перенос; сырое значение остаётся галочке (M3E-перелёт)
+        float colorProgress = Utilities.clamp(progress, 1f, 0f);
+        float roundProgress = progress >= 0.5f ? 1.0f : Math.max(0f, progress) / 0.5f;
 
         int cx = bounds.centerX();
         int cy = bounds.centerY();
@@ -431,7 +436,7 @@ public class CheckBoxBase {
                     backgroundPaint.setColor(getThemedColor(checkColorKey));
                 }
             } else {
-                backgroundPaint.setColor(AndroidUtilities.getOffsetColor(0x00ffffff, getThemedColor(background2ColorKey >= 0 ? background2ColorKey : checkColorKey), progress, backgroundAlpha));
+                backgroundPaint.setColor(AndroidUtilities.getOffsetColor(0x00ffffff, getThemedColor(background2ColorKey >= 0 ? background2ColorKey : checkColorKey), colorProgress, backgroundAlpha));
             }
         } else {
             if (drawUnchecked) {
@@ -439,12 +444,12 @@ public class CheckBoxBase {
                 if (backgroundType == 8) {
                     backgroundPaint.setColor(getThemedColor(background2ColorKey));
                 } else {
-                    backgroundPaint.setColor(AndroidUtilities.getOffsetColor(0xffffffff, getThemedColor(checkColorKey), progress, backgroundAlpha));
+                    backgroundPaint.setColor(AndroidUtilities.getOffsetColor(0xffffffff, getThemedColor(checkColorKey), colorProgress, backgroundAlpha));
                 }
             } else if (backgroundColor != 0) {
                 backgroundPaint.setColor(0);
             } else {
-                backgroundPaint.setColor(AndroidUtilities.getOffsetColor(0x00ffffff, getThemedColor(background2ColorKey >= 0 ? background2ColorKey : checkColorKey), progress, backgroundAlpha));
+                backgroundPaint.setColor(AndroidUtilities.getOffsetColor(0x00ffffff, getThemedColor(background2ColorKey >= 0 ? background2ColorKey : checkColorKey), colorProgress, backgroundAlpha));
             }
         }
 
@@ -491,13 +496,13 @@ public class CheckBoxBase {
                 int sweepAngle;
                 if (backgroundType == 6) {
                     startAngle = 0;
-                    sweepAngle = (int) (-360 * progress);
+                    sweepAngle = (int) (-360 * colorProgress);
                 } else if (backgroundType == 1) {
                     startAngle = -90;
-                    sweepAngle = (int) (-270 * progress);
+                    sweepAngle = (int) (-270 * colorProgress);
                 } else {
                     startAngle = 90;
-                    sweepAngle = (int) (270 * progress);
+                    sweepAngle = (int) (270 * colorProgress);
                     if (LocaleController.isRTL) {
                         sweepAngle = -sweepAngle;
                     }
@@ -507,18 +512,20 @@ public class CheckBoxBase {
                     int color = getThemedColor(strokeBackgroundKey);
                     int alpha = Color.alpha(color);
                     backgroundPaint.setColor(color);
-                    backgroundPaint.setAlpha((int) (alpha * progress));
+                    backgroundPaint.setAlpha((int) (alpha * colorProgress));
                     canvas.drawArc(rect, startAngle, sweepAngle, false, backgroundPaint);
                     color = getThemedColor(Theme.key_chat_attachPhotoBackground);
                     alpha = Color.alpha(color);
                     backgroundPaint.setColor(color);
-                    backgroundPaint.setAlpha((int) (alpha * progress));
+                    backgroundPaint.setAlpha((int) (alpha * colorProgress));
                 }
                 canvas.drawArc(rect, startAngle, sweepAngle, false, backgroundPaint);
             }
         }
 
         if (roundProgress > 0) {
+            // кламп сверху не ставим: перелёт — сознательная выразительность M3E,
+            // галочка чуть пружинит в размере и возвращается
             float checkProgress = progress < 0.5f ? 0.0f : (progress - 0.5f) / 0.5f;
 
             if (backgroundType == 9) {

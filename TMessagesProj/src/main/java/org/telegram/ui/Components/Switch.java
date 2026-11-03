@@ -11,9 +11,6 @@ package org.telegram.ui.Components;
 import static org.telegram.messenger.AndroidUtilities.dp;
 import static org.telegram.messenger.AndroidUtilities.dpf2;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
@@ -39,6 +36,8 @@ import androidx.core.content.ContextCompat;
 import androidx.dynamicanimation.animation.FloatPropertyCompat;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
+
+import app.kiwigram.appearance.KiwiMotion;
 
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.R;
@@ -82,11 +81,12 @@ public class Switch extends View {
         }
     };
 
-    private ObjectAnimator checkAnimator;
     private SpringAnimation checkSpringAnimator;
     /** Альфа при новом стиле пишется сюда, а не во View (иначе ломаются overlay-битмапы). */
     private float overrideAlpha = 1.0f;
-    private ObjectAnimator iconAnimator;
+    private SpringAnimation iconSpringAnimator;
+    /** Анимация иконки в полёте (бывший «iconAnimator != null»). */
+    private boolean iconSpringRunning;
 
     private boolean attachedToWindow;
     private boolean isChecked;
@@ -185,13 +185,8 @@ public class Switch extends View {
     }
 
     private void cancelCheckAnimator() {
-        if (checkAnimator != null) {
-            checkAnimator.cancel();
-            checkAnimator = null;
-        }
         if (checkSpringAnimator != null) {
             checkSpringAnimator.cancel();
-            checkSpringAnimator = null;
         }
     }
 
@@ -213,11 +208,23 @@ public class Switch extends View {
         return isExteraSwitchStyle() ? dp(5) : 0;
     }
 
-    private void cancelIconAnimator() {
-        if (iconAnimator != null) {
-            iconAnimator.cancel();
-            iconAnimator = null;
+    private static final FloatPropertyCompat<Switch> ICON_PROGRESS_PROPERTY = new FloatPropertyCompat<Switch>("iconProgress") {
+        @Override
+        public float getValue(Switch object) {
+            return object.getIconProgress();
         }
+
+        @Override
+        public void setValue(Switch object, float value) {
+            object.setIconProgress(value);
+        }
+    };
+
+    private void cancelIconAnimator() {
+        if (iconSpringAnimator != null) {
+            iconSpringAnimator.cancel();
+        }
+        iconSpringRunning = false;
     }
 
     public void setDrawIconType(int type) {
@@ -305,50 +312,34 @@ public class Switch extends View {
     }
 
     private void animateToCheckedState(boolean newCheckedState) {
-        cancelCheckAnimator();
+        final float target = newCheckedState ? 1f : 0f;
+        if (checkSpringAnimator == null) {
+            checkSpringAnimator = new SpringAnimation(this, PROGRESS_PROPERTY);
+            checkSpringAnimator.setMinimumVisibleChange(0.001f);
+        }
+        // M3E: один прерываемый спринг на вью. Повторный тап не гасит движение,
+        // а перенаправляет его с сохранением накопленной скорости.
         if (isMaterial3SwitchStyle()) {
-            checkSpringAnimator = new SpringAnimation(this, PROGRESS_PROPERTY)
-                    .setSpring(new SpringForce(newCheckedState ? 1f : 0f)
-                            .setDampingRatio(0.65f)
-                            .setStiffness(510f))
-                    .setMinimumVisibleChange(0.001f)
-                    .setStartValue(progress);
-            checkSpringAnimator.start();
-            return;
+            checkSpringAnimator.setSpring(new SpringForce(target).setDampingRatio(0.65f).setStiffness(510f));
+        } else if (isExteraSwitchStyle()) {
+            // exteraGram: SpringForce(target).setDampingRatio(0.9f).setStiffness(1400f)
+            checkSpringAnimator.setSpring(new SpringForce(target).setDampingRatio(0.9f).setStiffness(1400f));
+        } else {
+            // легаси-стиль: заезд на схеме spatial (лёгкий отскок), отвод — effects (без отскока)
+            checkSpringAnimator.setSpring(newCheckedState ? KiwiMotion.spatialDefault() : KiwiMotion.effectsDefault());
         }
-        if (isExteraSwitchStyle()) {
-            // exteraGram: SpringForce(target).setDampingRatio(0.9f).setStiffness(1400f), minimumVisibleChange 0.001f
-            checkSpringAnimator = new SpringAnimation(this, PROGRESS_PROPERTY)
-                    .setSpring(new SpringForce(newCheckedState ? 1f : 0f)
-                            .setDampingRatio(0.9f)
-                            .setStiffness(1400f))
-                    .setMinimumVisibleChange(0.001f)
-                    .setStartValue(progress);
-            checkSpringAnimator.start();
-            return;
-        }
-        checkAnimator = ObjectAnimator.ofFloat(this, "progress", newCheckedState ? 1 : 0);
-        checkAnimator.setDuration(200);
-        checkAnimator.setInterpolator(CubicBezierInterpolator.EASE_OUT_QUINT);
-        checkAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                checkAnimator = null;
-            }
-        });
-        checkAnimator.start();
+        checkSpringAnimator.animateToFinalPosition(target);
     }
 
     private void animateIcon(boolean newCheckedState) {
-        iconAnimator = ObjectAnimator.ofFloat(this, "iconProgress", newCheckedState ? 1 : 0);
-        iconAnimator.setDuration(200);
-        iconAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                iconAnimator = null;
-            }
-        });
-        iconAnimator.start();
+        // смена иконки — effects-анимация (альфа), пружина без отскока
+        if (iconSpringAnimator == null) {
+            iconSpringAnimator = new SpringAnimation(this, ICON_PROGRESS_PROPERTY);
+            iconSpringAnimator.addEndListener((animation, canceled, value, velocity) -> iconSpringRunning = false);
+        }
+        iconSpringRunning = true;
+        iconSpringAnimator.setSpring(KiwiMotion.effectsDefault());
+        iconSpringAnimator.animateToFinalPosition(newCheckedState ? 1f : 0f);
     }
 
     @Override
@@ -658,7 +649,7 @@ public class Switch extends View {
                     endX = startX + AndroidUtilities.dp(7);
                     endY = startY - AndroidUtilities.dp(7);
                     canvasToDraw.drawLine(startX, startY, endX, endY, paint2);
-                } else if (drawIconType == 2 || iconAnimator != null) {
+                } else if (drawIconType == 2 || iconSpringRunning) {
                     paint2.setAlpha((int) (255 * (1.0f - iconProgress)));
                     canvasToDraw.drawLine(tx, ty, tx, ty - AndroidUtilities.dp(5), paint2);
                     canvasToDraw.save();
@@ -1026,7 +1017,7 @@ public class Switch extends View {
             }
             final float colorProgress = Utilities.clamp01(getLayerColorProgress(a));
             paint.setColor(lerpColor(thumbOff, thumbOn, colorProgress));
-            final float iconFactor = drawIconType == 1 || drawIconType == 2 || iconAnimator != null
+            final float iconFactor = drawIconType == 1 || drawIconType == 2 || iconSpringRunning
                     ? 1f
                     : (iconDrawable != null ? animatorIconVisibility.getFloatValue() : 0f);
             app.kiwigram.appearance.Material3SwitchHelper.setThumbBounds(rectF, cx + offset, cy + offset, progress, isChecked, iconFactor, animatorPressed.getFloatValue());
@@ -1050,7 +1041,7 @@ public class Switch extends View {
                     paint2.setStrokeWidth(app.kiwigram.appearance.Material3SwitchHelper.iconStrokeWidth());
                     app.kiwigram.appearance.Material3SwitchHelper.setCheckIconLines(iconLines, cx, cy, progress);
                     target.drawLines(iconLines, paint2);
-                } else if (drawIconType == 2 || iconAnimator != null) {
+                } else if (drawIconType == 2 || iconSpringRunning) {
                     paint2.setAlpha((int) (255 * (1f - iconProgress)));
                     paint2.setStrokeWidth(app.kiwigram.appearance.Material3SwitchHelper.iconStrokeWidth());
                     target.drawLine(cx, cy, cx, cy - app.kiwigram.appearance.Material3SwitchHelper.clockHandLength(true), paint2);
@@ -1082,10 +1073,11 @@ public class Switch extends View {
     }
 
     private int lerpColor(int color1, int color2, float progress) {
-        int red = (int) (Color.red(color1) + (Color.red(color2) - Color.red(color1)) * progress);
-        int green = (int) (Color.green(color1) + (Color.green(color2) - Color.green(color1)) * progress);
-        int blue = (int) (Color.blue(color1) + (Color.blue(color2) - Color.blue(color1)) * progress);
-        int alpha = (int) (Color.alpha(color1) + (Color.alpha(color2) - Color.alpha(color1)) * progress);
+        // кламп каналов: перелёт пружины (progress > 1) не должен заворачивать байты
+        int red = Utilities.clamp((int) (Color.red(color1) + (Color.red(color2) - Color.red(color1)) * progress), 255, 0);
+        int green = Utilities.clamp((int) (Color.green(color1) + (Color.green(color2) - Color.green(color1)) * progress), 255, 0);
+        int blue = Utilities.clamp((int) (Color.blue(color1) + (Color.blue(color2) - Color.blue(color1)) * progress), 255, 0);
+        int alpha = Utilities.clamp((int) (Color.alpha(color1) + (Color.alpha(color2) - Color.alpha(color1)) * progress), 255, 0);
         return ((alpha & 0xff) << 24) | ((red & 0xff) << 16) | ((green & 0xff) << 8) | (blue & 0xff);
     }
 
