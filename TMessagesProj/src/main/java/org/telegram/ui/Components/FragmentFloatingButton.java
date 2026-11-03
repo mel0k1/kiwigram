@@ -166,10 +166,11 @@ public class FragmentFloatingButton extends FrameLayout implements FactorAnimato
         } else {
             imageView.setColorFilter(Theme.getColor(Theme.key_chats_actionIcon, resourcesProvider), PorterDuff.Mode.SRC_IN);
             progressView.setProgressColor(Theme.getColor(Theme.key_chats_actionIcon, resourcesProvider));
-            setBackground(app.kiwigram.utils.UIUtil.createFabSelectorDrawable(48,
+            // kiwigram: M3E shape morphing — радиус FAB «затягивается» пружиной при нажатии.
+            setBackground(app.kiwigram.appearance.KiwiShapes.pressMorphBackground(this,
+                dp(app.kiwigram.appearance.AppearanceConfig.fabCornerRadius(48)),
                 Theme.getColor(Theme.key_featuredStickers_addButton, resourcesProvider),
-                Theme.getColor(Theme.key_featuredStickers_addButtonPressed, resourcesProvider)
-            ));
+                Theme.getColor(Theme.key_featuredStickers_addButtonPressed, resourcesProvider)));
         }
     }
 

@@ -17,7 +17,6 @@ import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.LocaleController;
 import org.telegram.messenger.R;
 import org.telegram.ui.ActionBar.Theme;
-import org.telegram.ui.Components.Easings;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.ScaleStateListAnimator;
 
@@ -67,8 +66,9 @@ public class FabShapeCell extends LinearLayout {
             if (to == progress) {
                 return;
             }
-            animator = ValueAnimator.ofFloat(progress, to).setDuration(250);
-            animator.setInterpolator(Easings.easeInOutQuad);
+            animator = ValueAnimator.ofFloat(progress, to).setDuration(420);
+            // kiwigram: M3E — пружинный отскок выделения превью (spatial default).
+            animator.setInterpolator(KiwiMotion.springInterpolator(KiwiMotion.SPATIAL_DAMPING, KiwiMotion.SPATIAL_STIFFNESS_DEFAULT));
             animator.addUpdateListener(a -> setProgress((Float) a.getAnimatedValue()));
             animator.start();
         }

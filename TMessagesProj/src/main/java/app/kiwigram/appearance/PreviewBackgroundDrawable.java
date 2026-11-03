@@ -61,8 +61,12 @@ public class PreviewBackgroundDrawable extends Drawable {
     @Override
     public void draw(@NonNull Canvas canvas) {
         backgroundPaint.setColor(PreviewColors.getBackgroundColor());
+        // selectionProgress может перелетать за 1 (пружина M3E) — в blendARGB канал
+        // цвета при этом переполнился бы, поэтому цвет всегда зажат в [0, 1],
+        // а пружинный перелёт остаётся виден в толщине обводки ниже.
         strokePaint.setColor(ColorUtils.blendARGB(PreviewColors.getOutlineColor(),
-                Theme.getColor(Theme.key_windowBackgroundWhiteValueText), selectionProgress));
+                Theme.getColor(Theme.key_windowBackgroundWhiteValueText),
+                Math.max(0f, Math.min(1f, selectionProgress))));
         // setColor затирает альфу, поэтому setAlpha применяется после него, а не один раз.
         if (alpha != 0xFF) {
             backgroundPaint.setAlpha(backgroundPaint.getAlpha() * alpha / 0xFF);
