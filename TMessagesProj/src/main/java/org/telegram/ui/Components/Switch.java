@@ -335,6 +335,8 @@ public class Switch extends View {
         // смена иконки — effects-анимация (альфа), пружина без отскока
         if (iconSpringAnimator == null) {
             iconSpringAnimator = new SpringAnimation(this, ICON_PROGRESS_PROPERTY);
+            // порог устоя: дефолт (1.0) для 0..1-прогресса означает мгновенный конец
+            iconSpringAnimator.setMinimumVisibleChange(0.001f);
             iconSpringAnimator.addEndListener((animation, canceled, value, velocity) -> iconSpringRunning = false);
         }
         iconSpringRunning = true;

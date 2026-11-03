@@ -180,6 +180,8 @@ public class CheckBox extends View {
         // повторный тап перенаправляет спринг с сохранением скорости.
         if (checkAnimator == null) {
             checkAnimator = new SpringAnimation(this, PROGRESS_PROPERTY);
+            // порог устоя: дефолт (1.0) для 0..1-прогресса означает мгновенный конец
+            checkAnimator.setMinimumVisibleChange(0.001f);
             checkAnimator.addEndListener((animation, canceled, value, velocity) -> {
                 checkSpringRunning = false;
                 if (!isChecked) {

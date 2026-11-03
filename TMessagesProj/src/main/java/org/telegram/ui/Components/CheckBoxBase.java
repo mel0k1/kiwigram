@@ -284,6 +284,8 @@ public class CheckBoxBase {
         // один прерываемый спринг сохраняет скорость при повторном тапе.
         if (checkAnimator == null) {
             checkAnimator = new SpringAnimation(new FloatValueHolder(progress));
+            // порог устоя: дефолт (1.0) для 0..1-прогресса означает мгновенный конец
+            checkAnimator.setMinimumVisibleChange(0.001f);
             checkAnimator.addEndListener((animation, canceled, value, velocity) -> {
                 checkSpringRunning = false;
                 if (!isChecked) {

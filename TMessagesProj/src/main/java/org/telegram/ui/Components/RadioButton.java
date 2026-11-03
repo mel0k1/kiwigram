@@ -139,6 +139,8 @@ public class RadioButton extends View {
         // прерываемый спринг сохраняет скорость при переключении выбора.
         if (checkAnimator == null) {
             checkAnimator = new SpringAnimation(this, PROGRESS_PROPERTY);
+            // порог устоя: дефолт (1.0) для 0..1-прогресса означает мгновенный конец
+            checkAnimator.setMinimumVisibleChange(0.001f);
         }
         checkAnimator.setSpring(newCheckedState ? KiwiMotion.spatialDefault() : KiwiMotion.effectsDefault());
         checkAnimator.animateToFinalPosition(newCheckedState ? 1f : 0f);
