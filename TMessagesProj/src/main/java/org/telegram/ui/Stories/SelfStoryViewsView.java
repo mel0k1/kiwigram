@@ -100,7 +100,11 @@ public class SelfStoryViewsView extends FrameLayout {
         };
         //selfStoriesPreviewView.setAlpha(0.2f);
 
-        shadowDrawable = context.getResources().getDrawable(R.drawable.sheet_shadow_round).mutate();
+        // M3E-углы (28dp) — общий с BottomSheet ассет; при выключенном флаге — прежний sheet_shadow_round.
+        shadowDrawable = context.getResources().getDrawable(
+                app.kiwigram.appearance.AppearanceConfig.m3eDialogCorners()
+                        ? R.drawable.sheet_shadow_round_m3e
+                        : R.drawable.sheet_shadow_round).mutate();
         shadowDrawable.setColorFilter(new PorterDuffColorFilter(Theme.getColor(Theme.key_dialogBackground, resourcesProvider), PorterDuff.Mode.MULTIPLY));
         viewPagerContainer = new ContainerView(context);
 

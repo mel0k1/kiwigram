@@ -937,7 +937,8 @@ public class MentionsContainerView extends FrameLayout implements NotificationCe
 
     public void setBackgroundDrawable(@NonNull BlurredBackgroundDrawable backgroundDrawable) {
         this.backgroundDrawable = backgroundDrawable;
-        this.backgroundDrawable.setRadius(dp(22));
+        // M3E-углы панели ввода: 28dp при включённом флаге, привычные 22dp иначе.
+        this.backgroundDrawable.setRadius(dp(app.kiwigram.appearance.AppearanceConfig.m3eDialogCorners() ? 28 : 22));
         this.backgroundDrawable.setPadding(dp(5));
 
         checkListViewPadding();
