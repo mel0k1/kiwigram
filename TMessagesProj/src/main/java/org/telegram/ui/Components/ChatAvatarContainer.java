@@ -38,10 +38,13 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.dynamicanimation.animation.FloatValueHolder;
+import androidx.dynamicanimation.animation.SpringAnimation;
 
 import com.radolyn.ayugram.utils.LastSeenHelper;
 
 import app.kiwigram.appearance.ChatHeaderUiHelper;
+import app.kiwigram.appearance.KiwiMotion;
 
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
@@ -77,16 +80,23 @@ import org.telegram.ui.community.CommunityArrowDrawable;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-import me.vkryl.android.animator.BoolAnimator;
-import me.vkryl.android.animator.FactorAnimator;
-
 import xyz.nextalone.nagram.NaConfig;
 import tw.nekomimi.nekogram.helpers.MessageHelper;
 
-public class ChatAvatarContainer extends FrameLayout implements FactorAnimator.Target, NotificationCenter.NotificationCenterDelegate {
+public class ChatAvatarContainer extends FrameLayout implements NotificationCenter.NotificationCenterDelegate {
 
-    private static final int ANIMATOR_ID_TIME_ITEM_VISIBLE = 0;
-    private final BoolAnimator animatorTimeVisible = new BoolAnimator(ANIMATOR_ID_TIME_ITEM_VISIBLE, this, CubicBezierInterpolator.EASE_OUT_QUINT, 320);
+    /**
+     * M3E-пружины шапки чата (KiwiMotion.SPATIAL_FAST: damping 0.6, stiffness 1400):
+     * сжатие аватара при нажатии, проскок звёзд статуса, появление иконки таймера.
+     * Все прерываемые: повторное касание сохраняет накопленную скорость.
+     */
+    private final FloatValueHolder avatarPressHolder = new FloatValueHolder(1f);
+    private SpringAnimation avatarPressAnim;
+    private boolean timeItemVisible;
+    private final FloatValueHolder timeItemHolder = new FloatValueHolder(0f);
+    private SpringAnimation timeItemAnim;
+    private final FloatValueHolder[] starHolders = { new FloatValueHolder(0f), new FloatValueHolder(0f) };
+    private final SpringAnimation[] starAnims = new SpringAnimation[2];
 
     public boolean allowDrawStories;
     private Integer storiesForceState;
@@ -353,13 +363,22 @@ public class ChatAvatarContainer extends FrameLayout implements FactorAnimator.T
         applyAvatarRadius(avatarSizeInDp, false, false);
         addView(avatarImageView);
         if (avatarClickable) {
-            final TLRPC.Chat chat = parentFragment != null ? parentFragment.getCurrentChat() : null;
-            final TLRPC.User user = parentFragment != null ? parentFragment.getCurrentUser() : null;
-            final boolean hasLinkedCommunity = chat != null && chat.linked_community_id != 0
-                || user != null && user.linked_community_id != 0;
-            if (isCentered() || hasLinkedCommunity) {
-                ScaleStateListAnimator.apply(avatarImageView, .05f, 1.2f);
-            }
+            // M3E-пружина аватара шапки: нажатие сжимает до 0.94, отпускание
+            // возвращает с лёгким проскоком — как у строк списка чатов. Заменяет
+            // прежний ScaleStateListAnimator, который работал только у центрированных
+            // шапок и шапок с сообществом.
+            avatarImageView.setOnTouchListener((v, event) -> {
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                        animateAvatarPress(0.94f);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        animateAvatarPress(1f);
+                        break;
+                }
+                return false;
+            });
             avatarImageView.setOnClickListener(v -> {
                 if (!onAvatarClick()) {
                     openProfile(true);
@@ -651,7 +670,7 @@ public class ChatAvatarContainer extends FrameLayout implements FactorAnimator.T
         }
         TLRPC.Chat chat = parentFragment.getCurrentChat();
         if (chat != null && !ChatObject.canUserDoAdminAction(chat, ChatObject.ACTION_DELETE_MESSAGES)) {
-            if (animatorTimeVisible.getValue()) {
+            if (timeItemVisible) {
                 parentFragment.showTimerHint();
             }
             return false;
@@ -1065,28 +1084,58 @@ public class ChatAvatarContainer extends FrameLayout implements FactorAnimator.T
     }
 
 
-    @Override
-    public void onFactorChanged(int id, float factor, float fraction, FactorAnimator callee) {
-        if (id == ANIMATOR_ID_TIME_ITEM_VISIBLE) {
-            if (timeItem != null) {
-                timeItem.setAlpha(factor);
-                timeItem.setScaleX(factor * 0.85f);
-                timeItem.setScaleY(factor * 0.85f);
-                timeItem.setVisibility(factor > 0 ? VISIBLE : GONE);
-            }
+    /** Применяет фактор 0..1 к иконке таймера: альфа, масштаб и видимость. */
+    private void applyTimeItemFactor(float factor) {
+        if (timeItem == null) {
+            return;
         }
+        timeItem.setAlpha(factor);
+        timeItem.setScaleX(factor * 0.85f);
+        timeItem.setScaleY(factor * 0.85f);
+        timeItem.setVisibility(factor > 0 ? VISIBLE : GONE);
     }
 
+    /** Пружина фактора иконки таймера вместо прежнего BoolAnimator (cubic 320ms). */
+    private SpringAnimation timeItemAnimation() {
+        if (timeItemAnim == null) {
+            timeItemAnim = new SpringAnimation(timeItemHolder);
+            timeItemAnim.getSpring().setDampingRatio(KiwiMotion.SPATIAL_DAMPING).setStiffness(KiwiMotion.SPATIAL_STIFFNESS_FAST);
+            timeItemAnim.setMinimumVisibleChange(0.001f);
+            timeItemAnim.addUpdateListener((animation, value, velocity) -> applyTimeItemFactor(value));
+            timeItemAnim.addEndListener((animation, canceled, value, velocity) -> {
+                if (!canceled && value < 0.01f) {
+                    applyTimeItemFactor(0f);
+                }
+            });
+        }
+        return timeItemAnim;
+    }
 
     public void showTimeItem(boolean animated) {
         if (avatarImageView.getVisibility() != VISIBLE) {
             return;
         }
-        animatorTimeVisible.setValue(true, animated);
+        timeItemVisible = true;
+        if (animated) {
+            timeItemAnimation().animateToFinalPosition(1f);
+        } else {
+            if (timeItemAnim != null) {
+                timeItemAnim.cancel();
+            }
+            applyTimeItemFactor(1f);
+        }
     }
 
     public void hideTimeItem(boolean animated) {
-        animatorTimeVisible.setValue(false, animated);
+        timeItemVisible = false;
+        if (animated) {
+            timeItemAnimation().animateToFinalPosition(0f);
+        } else {
+            if (timeItemAnim != null) {
+                timeItemAnim.cancel();
+            }
+            applyTimeItemFactor(0f);
+        }
     }
 
     public void setTime(int value, boolean animated) {
@@ -1124,17 +1173,54 @@ public class ChatAvatarContainer extends FrameLayout implements FactorAnimator.T
                 starBgItem.setVisibility(VISIBLE);
                 starFgItem.setVisibility(VISIBLE);
             }
-            starBgItem.animate().alpha(stars ? 1f : 0f).scaleX(stars ? 1.1f : 0f).scaleY(stars ? 1.1f : 0f).withEndAction(() -> {
-                if (!stars) {
-                    starBgItem.setVisibility(INVISIBLE);
-                }
-            }).start();
-            starFgItem.animate().alpha(stars ? 1f : 0f).scaleX(stars ? 1f : 0f).scaleY(stars ? 1f : 0f).withEndAction(() -> {
-                if (!stars) {
-                    starFgItem.setVisibility(INVISIBLE);
-                }
-            }).start();
+            // M3E-пружина вместо tween: масштаб приходит с лёгким проскоком,
+            // альфа следует за масштабом. Прерываемо при повторном вызове.
+            animateStar(starBgItem, 0, stars, 1.1f);
+            animateStar(starFgItem, 1, stars, 1f);
         }
+    }
+
+    /**
+     * Пружина появления/скрытия звезды статуса (KiwiMotion SPATIAL_FAST):
+     * holder[index] держит текущий масштаб, альфа = clamp(масштаб / fullScale).
+     */
+    private void animateStar(View star, int index, boolean show, float fullScale) {
+        final FloatValueHolder holder = starHolders[index];
+        SpringAnimation anim = starAnims[index];
+        if (anim == null) {
+            anim = starAnims[index] = new SpringAnimation(holder);
+            anim.getSpring().setDampingRatio(KiwiMotion.SPATIAL_DAMPING).setStiffness(KiwiMotion.SPATIAL_STIFFNESS_FAST);
+            anim.setMinimumVisibleChange(0.001f);
+            anim.addUpdateListener((animation, value, velocity) -> {
+                star.setScaleX(value);
+                star.setScaleY(value);
+                star.setAlpha(Math.max(0f, Math.min(1f, value / fullScale)));
+            });
+            anim.addEndListener((animation, canceled, value, velocity) -> {
+                if (!canceled && value < 0.05f) {
+                    star.setVisibility(INVISIBLE);
+                }
+            });
+        }
+        if (show && holder.getValue() < 0.01f && anim.isRunning()) {
+            // повторный показ из нуля: начинаем с чистого масштаба
+            holder.setValue(0f);
+        }
+        anim.animateToFinalPosition(show ? fullScale : 0f);
+    }
+
+    /** Пружина сжатия аватара шапки при нажатии (см. setOnTouchListener в конструкторе). */
+    private void animateAvatarPress(float target) {
+        if (avatarPressAnim == null) {
+            avatarPressAnim = new SpringAnimation(avatarPressHolder);
+            avatarPressAnim.getSpring().setDampingRatio(KiwiMotion.SPATIAL_DAMPING).setStiffness(KiwiMotion.SPATIAL_STIFFNESS_FAST);
+            avatarPressAnim.setMinimumVisibleChange(0.001f);
+            avatarPressAnim.addUpdateListener((animation, value, velocity) -> {
+                avatarImageView.setScaleX(value);
+                avatarImageView.setScaleY(value);
+            });
+        }
+        avatarPressAnim.animateToFinalPosition(target);
     }
 
     private boolean rightDrawableIsScamOrVerified = false;
